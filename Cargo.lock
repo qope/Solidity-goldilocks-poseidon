@@ -353,13 +353,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3a7f1a85a8cb948af5e47da488bd78c6d18d3d8cb25b490676f3b9f68bc5b5c8"
 
 [[package]]
-name = "poseidon-contract"
-version = "0.1.0"
-dependencies = [
- "plonky2",
-]
-
-[[package]]
 name = "ppv-lite86"
 version = "0.2.17"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -475,6 +468,13 @@ dependencies = [
  "proc-macro2",
  "quote",
  "syn",
+]
+
+[[package]]
+name = "solidity-goldilocks-poseidon"
+version = "0.1.0"
+dependencies = [
+ "plonky2",
 ]
 
 [[package]]
