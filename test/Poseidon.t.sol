@@ -2,7 +2,6 @@
 pragma solidity ^0.8.13;
 
 import "forge-std/Test.sol";
-import "../contract/GoldilocksField.sol";
 import "../contract/Poseidon.sol";
 
 contract PoseidonTest is Test {
@@ -12,10 +11,10 @@ contract PoseidonTest is Test {
         poseidon = new Poseidon();
     }
 
-    function testHashN() public {
-        uint64[] memory input = new uint64[](1);
+    function testPoseidon() public {
+        uint256[] memory input = new uint256[](1);
         input[0] = 1;
-        uint64[] memory output = poseidon.hash_n_to_m_no_pad(input, 4);
+        uint256[] memory output = poseidon.hash_n_to_m_no_pad(input, 4);
         assertEq(output[0], 15020833855946683413);
         assertEq(output[1], 2541896837400596712);
         assertEq(output[2], 5158482081674306993);

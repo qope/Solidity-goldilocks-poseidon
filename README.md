@@ -11,10 +11,7 @@ forge test
 Result
 
 ```
-[⠆] Compiling...
-No files changed, compilation skipped
-
 Running 1 test for test/Poseidon.t.sol:PoseidonTest
-[PASS] testHashN() (gas: 3781541)
-Test result: ok. 1 passed; 0 failed; finished in 14.24ms
+[PASS] testPoseidon() (gas: 3827852)
+Test result: ok. 1 passed; 0 failed; finished in 11.89ms
 ```

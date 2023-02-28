@@ -1,20 +1,20 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.9;
 
-import "./GoldilocksField.sol";
 import "forge-std/Test.sol";
 
 contract Poseidon {
-    uint32 public constant HALF_N_FULL_ROUNDS = 4;
-    uint32 constant N_FULL_ROUNDS_TOTAL = 2 * HALF_N_FULL_ROUNDS;
-    uint32 constant N_PARTIAL_ROUNDS = 22;
-    uint32 constant N_ROUNDS = N_FULL_ROUNDS_TOTAL + N_PARTIAL_ROUNDS;
-    uint32 constant MAX_WIDTH = 12;
-    uint32 constant WIDTH = 12;
-    uint32 constant SPONGE_RATE = 8;
-    uint64[12] MDS_MATRIX_CIRC = [17, 15, 41, 16, 2, 28, 13, 13, 39, 18, 34, 20];
-    uint64[12] MDS_MATRIX_DIAG = [8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-    uint64[360] ALL_ROUND_CONSTANTS = [
+    uint256 public constant HALF_N_FULL_ROUNDS = 4;
+    uint256 constant N_FULL_ROUNDS_TOTAL = 2 * HALF_N_FULL_ROUNDS;
+    uint256 constant N_PARTIAL_ROUNDS = 22;
+    uint256 constant N_ROUNDS = N_FULL_ROUNDS_TOTAL + N_PARTIAL_ROUNDS;
+    uint256 constant MAX_WIDTH = 12;
+    uint256 constant WIDTH = 12;
+    uint256 constant SPONGE_RATE = 8;
+    uint256 constant ORDER = 18446744069414584321;
+    uint256[12] MDS_MATRIX_CIRC = [17, 15, 41, 16, 2, 28, 13, 13, 39, 18, 34, 20];
+    uint256[12] MDS_MATRIX_DIAG = [8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    uint256[360] ALL_ROUND_CONSTANTS = [
         0xb585f766f2144405,
         0x7746a55f43921ad7,
         0xb2fb0d31cee799b4,
@@ -377,49 +377,70 @@ contract Poseidon {
         0xbc8dfb627fe558fc
     ];
 
-    function mds_row_shf(uint64 r, uint64[WIDTH] memory v) public view returns (uint64) {
-        uint64 res = 0;
-        for (uint256 i = 0; i < 12; i++) {
-            res = F.add(res, F.mul(v[(i + r) % WIDTH], MDS_MATRIX_CIRC[i]));
+    function mod(uint256 a) internal pure returns (uint256 res) {
+        assembly {
+            res := mod(a, ORDER)
         }
-        res = F.add(res, F.mul(v[r], MDS_MATRIX_DIAG[r]));
+    }
+
+    function mul(uint256 a, uint256 b) internal pure returns (uint256 res) {
+        assembly {
+            res := mulmod(a, b, ORDER)
+        }
+    }
+
+    function add(uint256 a, uint256 b) internal pure returns (uint256 res) {
+        assembly {
+            res := addmod(a, b, ORDER)
+        }
+    }
+
+    function mds_row_shf(uint256 r, uint256[WIDTH] memory v) public view returns (uint256) {
+        uint256 res = 0;
+        for (uint256 i = 0; i < 12; i++) {
+            res += v[(i + r) % WIDTH] * MDS_MATRIX_CIRC[i]; // about 128 bits
+        }
+        res = add(res, v[r] * MDS_MATRIX_DIAG[r]);
         return res;
     }
 
-    function mds_layer(uint64[WIDTH] memory state) public view returns (uint64[WIDTH] memory) {
-        uint64[WIDTH] memory result;
-        for (uint64 r = 0; r < 12; r++) {
+    function mds_layer(uint256[WIDTH] memory state) public view returns (uint256[WIDTH] memory) {
+        uint256[WIDTH] memory result;
+        for (uint256 r = 0; r < 12; r++) {
             result[r] = mds_row_shf(r, state);
         }
         return result;
     }
 
-    function constant_layer(uint64[WIDTH] memory state, uint64 round_ctr) public view returns (uint64[WIDTH] memory) {
+    function constant_layer(uint256[WIDTH] memory state, uint256 round_ctr)
+        public
+        view
+        returns (uint256[WIDTH] memory)
+    {
         for (uint256 i = 0; i < 12; i++) {
-            state[i] = F.add(state[i], ALL_ROUND_CONSTANTS[i + WIDTH * round_ctr]);
+            state[i] = add(state[i], ALL_ROUND_CONSTANTS[i + WIDTH * round_ctr]);
         }
-        // console.log(state[0]);
         return state;
     }
 
-    function sbox_monomial(uint64 x) public pure returns (uint64) {
-        uint64 x2 = F.square(x);
-        uint64 x4 = F.square(x2);
-        uint64 x3 = F.mul(x, x2);
-        return F.mul(x3, x4);
+    function sbox_monomial(uint256 x) public pure returns (uint256) {
+        uint256 x2 = mul(x, x); // 64 bits
+        uint256 x4 = mul(x2, x2); // 64 bits
+        uint256 x3 = x * x2; // 128 bit
+        return mul(x3, x4);
     }
 
-    function sbox_layer(uint64[WIDTH] memory state) public pure returns (uint64[WIDTH] memory) {
+    function sbox_layer(uint256[WIDTH] memory state) public pure returns (uint256[WIDTH] memory) {
         for (uint256 i = 0; i < 12; i++) {
             state[i] = sbox_monomial(state[i]);
         }
         return state;
     }
 
-    function full_rounds(uint64[WIDTH] memory state, uint64 round_ctr)
+    function full_rounds(uint256[WIDTH] memory state, uint256 round_ctr)
         public
         view
-        returns (uint64[WIDTH] memory, uint64)
+        returns (uint256[WIDTH] memory, uint256)
     {
         for (uint256 i = 0; i < HALF_N_FULL_ROUNDS; i++) {
             state = constant_layer(state, round_ctr);
@@ -431,10 +452,10 @@ contract Poseidon {
         return (state, round_ctr);
     }
 
-    function partial_rounds(uint64[WIDTH] memory state, uint64 round_ctr)
+    function partial_rounds(uint256[WIDTH] memory state, uint256 round_ctr)
         public
         view
-        returns (uint64[WIDTH] memory, uint64)
+        returns (uint256[WIDTH] memory, uint256)
     {
         for (uint256 i = 0; i < N_PARTIAL_ROUNDS; i++) {
             state = constant_layer(state, round_ctr);
@@ -445,8 +466,8 @@ contract Poseidon {
         return (state, round_ctr);
     }
 
-    function permute(uint64[WIDTH] memory state) public view returns (uint64[WIDTH] memory) {
-        uint64 round_ctr = 0;
+    function permute(uint256[WIDTH] memory state) public view returns (uint256[WIDTH] memory) {
+        uint256 round_ctr = 0;
         (state, round_ctr) = full_rounds(state, round_ctr);
         (state, round_ctr) = partial_rounds(state, round_ctr);
         (state, round_ctr) = full_rounds(state, round_ctr);
@@ -454,8 +475,8 @@ contract Poseidon {
         return state;
     }
 
-    function hash_n_to_m_no_pad(uint64[] memory input, uint64 num_outputs) public view returns (uint64[] memory) {
-        uint64[WIDTH] memory state;
+    function hash_n_to_m_no_pad(uint256[] memory input, uint256 num_outputs) public view returns (uint256[] memory) {
+        uint256[WIDTH] memory state;
         for (uint256 i = 0; i < WIDTH; i++) {
             state[i] = 0;
         }
@@ -472,7 +493,7 @@ contract Poseidon {
             state[j] = input[num_full_round * SPONGE_RATE + j];
         }
         state = permute(state);
-        uint64[] memory output = new uint64[](num_outputs);
+        uint256[] memory output = new uint256[](num_outputs);
         for (uint256 j = 0; j < num_outputs; j++) {
             output[j] = state[j];
         }
