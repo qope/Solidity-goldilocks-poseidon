@@ -437,7 +437,7 @@ contract Poseidon {
         }
     }
 
-    // 25881 gas
+    // 10614 gas
     function _mds_layer(uint256[WIDTH] memory state) internal pure returns (uint256[WIDTH] memory new_state) {
         // for (uint256 r = 0; r < 12; r++) {
         //     new_state[r] = _mds_row_shf(r, state);
