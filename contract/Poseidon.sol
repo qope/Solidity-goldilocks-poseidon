@@ -14,6 +14,7 @@ contract Poseidon {
     uint256 constant ORDER = 18446744069414584321;
     uint256[12] MDS_MATRIX_CIRC = [17, 15, 41, 16, 2, 28, 13, 13, 39, 18, 34, 20];
     uint256[12] MDS_MATRIX_DIAG = [8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+
     uint256[360] ALL_ROUND_CONSTANTS = [
         0xb585f766f2144405,
         0x7746a55f43921ad7,
@@ -397,6 +398,7 @@ contract Poseidon {
 
     // `v[r]` allows 192 bits number.
     // `res` is 200 bits number.
+    // 2244 ~ 2306 gas
     function _mds_row_shf(uint256 r, uint256[WIDTH] memory v) internal view returns (uint256 res) {
         // uint256 res = 0;
         // for (uint256 i = 0; i < 12; i++) {
@@ -423,6 +425,7 @@ contract Poseidon {
         }
     }
 
+    // 25881 gas
     function _mds_layer(uint256[WIDTH] memory state) internal view returns (uint256[WIDTH] memory new_state) {
         // for (uint256 r = 0; r < 12; r++) {
         //     new_state[r] = _mds_row_shf(r, state);
@@ -443,32 +446,35 @@ contract Poseidon {
 
     // `state[i]` allows 200 bits number.
     // `new_state[i]` is 64 bits number.
+    // 26743 gas (Can be improved to 1229 gas if all are expanded to inline.)
     function _constant_layer(uint256[WIDTH] memory state, uint256 round_ctr)
         internal
         view
         returns (uint256[WIDTH] memory new_state)
     {
         // for (uint256 i = 0; i < 12; i++) {
-        //     new_state[i] = add(state[i], ALL_ROUND_CONSTANTS[i + WIDTH * round_ctr]);
+        //     new_state[0] = add(state[0], ALL_ROUND_CONSTANTS[i + WIDTH * round_ctr]);
         // }
         unchecked {
-            new_state[0] = add(state[0], ALL_ROUND_CONSTANTS[WIDTH * round_ctr + 0]);
-            new_state[1] = add(state[1], ALL_ROUND_CONSTANTS[WIDTH * round_ctr + 1]);
-            new_state[2] = add(state[2], ALL_ROUND_CONSTANTS[WIDTH * round_ctr + 2]);
-            new_state[3] = add(state[3], ALL_ROUND_CONSTANTS[WIDTH * round_ctr + 3]);
-            new_state[4] = add(state[4], ALL_ROUND_CONSTANTS[WIDTH * round_ctr + 4]);
-            new_state[5] = add(state[5], ALL_ROUND_CONSTANTS[WIDTH * round_ctr + 5]);
-            new_state[6] = add(state[6], ALL_ROUND_CONSTANTS[WIDTH * round_ctr + 6]);
-            new_state[7] = add(state[7], ALL_ROUND_CONSTANTS[WIDTH * round_ctr + 7]);
-            new_state[8] = add(state[8], ALL_ROUND_CONSTANTS[WIDTH * round_ctr + 8]);
-            new_state[9] = add(state[9], ALL_ROUND_CONSTANTS[WIDTH * round_ctr + 9]);
-            new_state[10] = add(state[10], ALL_ROUND_CONSTANTS[WIDTH * round_ctr + 10]);
-            new_state[11] = add(state[11], ALL_ROUND_CONSTANTS[WIDTH * round_ctr + 11]);
+            uint256 base_index = WIDTH * round_ctr;
+            new_state[0] = add(state[0], ALL_ROUND_CONSTANTS[base_index]);
+            new_state[1] = add(state[1], ALL_ROUND_CONSTANTS[base_index + 1]);
+            new_state[2] = add(state[2], ALL_ROUND_CONSTANTS[base_index + 2]);
+            new_state[3] = add(state[3], ALL_ROUND_CONSTANTS[base_index + 3]);
+            new_state[4] = add(state[4], ALL_ROUND_CONSTANTS[base_index + 4]);
+            new_state[5] = add(state[5], ALL_ROUND_CONSTANTS[base_index + 5]);
+            new_state[6] = add(state[6], ALL_ROUND_CONSTANTS[base_index + 6]);
+            new_state[7] = add(state[7], ALL_ROUND_CONSTANTS[base_index + 7]);
+            new_state[8] = add(state[8], ALL_ROUND_CONSTANTS[base_index + 8]);
+            new_state[9] = add(state[9], ALL_ROUND_CONSTANTS[base_index + 9]);
+            new_state[10] = add(state[10], ALL_ROUND_CONSTANTS[base_index + 10]);
+            new_state[11] = add(state[11], ALL_ROUND_CONSTANTS[base_index + 11]);
         }
     }
 
     // `x` allows 64 bits number.
     // `x7` is 192 bits number.
+    // 64 gas
     function _sbox_monomial(uint256 x) internal pure returns (uint256 x7) {
         uint256 x3;
         unchecked {
@@ -481,9 +487,12 @@ contract Poseidon {
         }
     }
 
+    // 2250 gas (Can be improved to 1192 gas if all are expanded to inline.)
     function _sbox_layer(uint256[WIDTH] memory state) internal pure returns (uint256[WIDTH] memory new_state) {
-        for (uint256 i = 0; i < 12; i++) {
-            new_state[i] = _sbox_monomial(state[i]);
+        unchecked {
+            for (uint256 i = 0; i < 12; i++) {
+                new_state[i] = _sbox_monomial(state[i]);
+            }
         }
     }
 
@@ -492,11 +501,13 @@ contract Poseidon {
         view
         returns (uint256[WIDTH] memory, uint256)
     {
-        for (uint256 i = 0; i < HALF_N_FULL_ROUNDS; i++) {
-            state = _constant_layer(state, round_ctr);
-            state = _sbox_layer(state);
-            state = _mds_layer(state);
-            round_ctr += 1;
+        unchecked {
+            for (uint256 i = 0; i < HALF_N_FULL_ROUNDS; i++) {
+                state = _constant_layer(state, round_ctr);
+                state = _sbox_layer(state);
+                state = _mds_layer(state);
+                round_ctr += 1;
+            }
         }
 
         return (state, round_ctr);
@@ -507,12 +518,15 @@ contract Poseidon {
         view
         returns (uint256[WIDTH] memory, uint256)
     {
-        for (uint256 i = 0; i < N_PARTIAL_ROUNDS; i++) {
-            state = _constant_layer(state, round_ctr);
-            state[0] = _sbox_monomial(state[0]);
-            state = _mds_layer(state);
-            round_ctr += 1;
+        unchecked {
+            for (uint256 i = 0; i < N_PARTIAL_ROUNDS; i++) {
+                state = _constant_layer(state, round_ctr);
+                state[0] = _sbox_monomial(state[0]);
+                state = _mds_layer(state);
+                round_ctr += 1;
+            }
         }
+
         return (state, round_ctr);
     }
 
@@ -521,9 +535,10 @@ contract Poseidon {
         (state, round_ctr) = _full_rounds(state, round_ctr);
         (state, round_ctr) = _partial_rounds(state, round_ctr);
         (state, round_ctr) = _full_rounds(state, round_ctr);
-        for (uint256 i = 0; i < 12; i++) {
+        for (uint256 i = 0; i < WIDTH; i++) {
             state[i] = mod(state[i]);
         }
+
         require(round_ctr == N_ROUNDS);
         return state;
     }

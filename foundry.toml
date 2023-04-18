@@ -4,4 +4,4 @@ out = 'out'
 libs = ['lib']
 
 optimizer = true
-# optimizer-runs = 200 # 10_000_000 # 200
+optimizer-runs = 200
