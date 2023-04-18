@@ -12,7 +12,6 @@ contract Poseidon {
     uint256 constant WIDTH = 12;
     uint256 constant SPONGE_RATE = 8;
     uint256 constant ORDER = 18446744069414584321;
-    uint256[12] MDS_MATRIX_CIRC = [17, 15, 41, 16, 2, 28, 13, 13, 39, 18, 34, 20];
     uint256 constant MDS_MATRIX_CIRC_0 = 17;
     uint256 constant MDS_MATRIX_CIRC_1 = 15;
     uint256 constant MDS_MATRIX_CIRC_2 = 41;
@@ -25,12 +24,48 @@ contract Poseidon {
     uint256 constant MDS_MATRIX_CIRC_9 = 18;
     uint256 constant MDS_MATRIX_CIRC_10 = 34;
     uint256 constant MDS_MATRIX_CIRC_11 = 20;
-    uint256[12] MDS_MATRIX_DIAG = [8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    uint256[12] MDS_MATRIX_CIRC = [
+        MDS_MATRIX_CIRC_0,
+        MDS_MATRIX_CIRC_1,
+        MDS_MATRIX_CIRC_2,
+        MDS_MATRIX_CIRC_3,
+        MDS_MATRIX_CIRC_4,
+        MDS_MATRIX_CIRC_5,
+        MDS_MATRIX_CIRC_6,
+        MDS_MATRIX_CIRC_7,
+        MDS_MATRIX_CIRC_8,
+        MDS_MATRIX_CIRC_9,
+        MDS_MATRIX_CIRC_10,
+        MDS_MATRIX_CIRC_11
+    ];
+    uint256 constant MDS_MATRIX_DIAG_0 = 8;
+    uint256[12] MDS_MATRIX_DIAG = [MDS_MATRIX_DIAG_0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
+    uint256 constant FAST_PARTIAL_FIRST_ROUND_CONSTANT_0 = 0x3cc3f892184df408;
+    uint256 constant FAST_PARTIAL_FIRST_ROUND_CONSTANT_1 = 0xe993fd841e7e97f1;
+    uint256 constant FAST_PARTIAL_FIRST_ROUND_CONSTANT_2 = 0xf2831d3575f0f3af;
+    uint256 constant FAST_PARTIAL_FIRST_ROUND_CONSTANT_3 = 0xd2500e0a350994ca;
+    uint256 constant FAST_PARTIAL_FIRST_ROUND_CONSTANT_4 = 0xc5571f35d7288633;
+    uint256 constant FAST_PARTIAL_FIRST_ROUND_CONSTANT_5 = 0x91d89c5184109a02;
+    uint256 constant FAST_PARTIAL_FIRST_ROUND_CONSTANT_6 = 0xf37f925d04e5667b;
+    uint256 constant FAST_PARTIAL_FIRST_ROUND_CONSTANT_7 = 0x2d6e448371955a69;
+    uint256 constant FAST_PARTIAL_FIRST_ROUND_CONSTANT_8 = 0x740ef19ce01398a1;
+    uint256 constant FAST_PARTIAL_FIRST_ROUND_CONSTANT_9 = 0x694d24c0752fdf45;
+    uint256 constant FAST_PARTIAL_FIRST_ROUND_CONSTANT_10 = 0x60936af96ee2f148;
+    uint256 constant FAST_PARTIAL_FIRST_ROUND_CONSTANT_11 = 0xc33448feadc78f0c;
     uint256[12] FAST_PARTIAL_FIRST_ROUND_CONSTANT = [
-        0x3cc3f892184df408, 0xe993fd841e7e97f1, 0xf2831d3575f0f3af, 0xd2500e0a350994ca,
-        0xc5571f35d7288633, 0x91d89c5184109a02, 0xf37f925d04e5667b, 0x2d6e448371955a69,
-        0x740ef19ce01398a1, 0x694d24c0752fdf45, 0x60936af96ee2f148, 0xc33448feadc78f0c
+        FAST_PARTIAL_FIRST_ROUND_CONSTANT_0,
+        FAST_PARTIAL_FIRST_ROUND_CONSTANT_1,
+        FAST_PARTIAL_FIRST_ROUND_CONSTANT_2,
+        FAST_PARTIAL_FIRST_ROUND_CONSTANT_3,
+        FAST_PARTIAL_FIRST_ROUND_CONSTANT_4,
+        FAST_PARTIAL_FIRST_ROUND_CONSTANT_5,
+        FAST_PARTIAL_FIRST_ROUND_CONSTANT_6,
+        FAST_PARTIAL_FIRST_ROUND_CONSTANT_7,
+        FAST_PARTIAL_FIRST_ROUND_CONSTANT_8,
+        FAST_PARTIAL_FIRST_ROUND_CONSTANT_9,
+        FAST_PARTIAL_FIRST_ROUND_CONSTANT_10,
+        FAST_PARTIAL_FIRST_ROUND_CONSTANT_11
     ];
 
     uint256[N_PARTIAL_ROUNDS] FAST_PARTIAL_ROUND_CONSTANTS = [
@@ -600,24 +635,24 @@ contract Poseidon {
     // `v[r]` allows 192 bits number.
     // `res` is 200 bits number.
     // 1118 ~ 1180 gas
-    function _mds_row_shf(uint256 r, uint256[WIDTH] memory v) internal view returns (uint256 res) {
+    function _mds_row_shf(uint256 r, uint256[WIDTH] memory v) internal pure returns (uint256 res) {
         // uint256 res = 0;
         unchecked {
-            for (uint256 i = 0; i < 12; i++) {
-                res += v[(i + r) % WIDTH] * MDS_MATRIX_CIRC[i]; // (192 + 8) bits
-            }
-            // res += v[r] * MDS_MATRIX_CIRC_0;
-            // res += v[(r + 1) % WIDTH] * MDS_MATRIX_CIRC_1;
-            // res += v[(r + 2) % WIDTH] * MDS_MATRIX_CIRC_2;
-            // res += v[(r + 3) % WIDTH] * MDS_MATRIX_CIRC_3;
-            // res += v[(r + 4) % WIDTH] * MDS_MATRIX_CIRC_4;
-            // res += v[(r + 5) % WIDTH] * MDS_MATRIX_CIRC_5;
-            // res += v[(r + 6) % WIDTH] * MDS_MATRIX_CIRC_6;
-            // res += v[(r + 7) % WIDTH] * MDS_MATRIX_CIRC_7;
-            // res += v[(r + 8) % WIDTH] * MDS_MATRIX_CIRC_8;
-            // res += v[(r + 9) % WIDTH] * MDS_MATRIX_CIRC_9;
-            // res += v[(r + 10) % WIDTH] * MDS_MATRIX_CIRC_10;
-            // res += v[(r + 11) % WIDTH] * MDS_MATRIX_CIRC_11;
+            // for (uint256 i = 0; i < 12; i++) {
+            //     res += v[(i + r) % WIDTH] * MDS_MATRIX_CIRC[i]; // (192 + 8) bits
+            // }
+            res += v[r] * MDS_MATRIX_CIRC_0;
+            res += v[(r + 1) % WIDTH] * MDS_MATRIX_CIRC_1;
+            res += v[(r + 2) % WIDTH] * MDS_MATRIX_CIRC_2;
+            res += v[(r + 3) % WIDTH] * MDS_MATRIX_CIRC_3;
+            res += v[(r + 4) % WIDTH] * MDS_MATRIX_CIRC_4;
+            res += v[(r + 5) % WIDTH] * MDS_MATRIX_CIRC_5;
+            res += v[(r + 6) % WIDTH] * MDS_MATRIX_CIRC_6;
+            res += v[(r + 7) % WIDTH] * MDS_MATRIX_CIRC_7;
+            res += v[(r + 8) % WIDTH] * MDS_MATRIX_CIRC_8;
+            res += v[(r + 9) % WIDTH] * MDS_MATRIX_CIRC_9;
+            res += v[(r + 10) % WIDTH] * MDS_MATRIX_CIRC_10;
+            res += v[(r + 11) % WIDTH] * MDS_MATRIX_CIRC_11;
 
             // res = add(res, v[r] * MDS_MATRIX_DIAG[r]);
             if (r == 0) {
@@ -627,50 +662,68 @@ contract Poseidon {
     }
 
     // 10614 gas
-    function _mds_layer(uint256[WIDTH] memory state) internal view returns (uint256[WIDTH] memory new_state) {
-        for (uint256 r = 0; r < 12; r++) {
-            new_state[r] = _mds_row_shf(r, state);
-        }
-        // new_state[0] = _mds_row_shf(0, state);
-        // new_state[1] = _mds_row_shf(1, state);
-        // new_state[2] = _mds_row_shf(2, state);
-        // new_state[3] = _mds_row_shf(3, state);
-        // new_state[4] = _mds_row_shf(4, state);
-        // new_state[5] = _mds_row_shf(5, state);
-        // new_state[6] = _mds_row_shf(6, state);
-        // new_state[7] = _mds_row_shf(7, state);
-        // new_state[8] = _mds_row_shf(8, state);
-        // new_state[9] = _mds_row_shf(9, state);
-        // new_state[10] = _mds_row_shf(10, state);
-        // new_state[11] = _mds_row_shf(11, state);
+    function _mds_layer(uint256[WIDTH] memory state) internal pure returns (uint256[WIDTH] memory new_state) {
+        // for (uint256 r = 0; r < 12; r++) {
+        //     new_state[r] = _mds_row_shf(r, state);
+        // }
+        new_state[0] = _mds_row_shf(0, state);
+        new_state[1] = _mds_row_shf(1, state);
+        new_state[2] = _mds_row_shf(2, state);
+        new_state[3] = _mds_row_shf(3, state);
+        new_state[4] = _mds_row_shf(4, state);
+        new_state[5] = _mds_row_shf(5, state);
+        new_state[6] = _mds_row_shf(6, state);
+        new_state[7] = _mds_row_shf(7, state);
+        new_state[8] = _mds_row_shf(8, state);
+        new_state[9] = _mds_row_shf(9, state);
+        new_state[10] = _mds_row_shf(10, state);
+        new_state[11] = _mds_row_shf(11, state);
     }
 
     function _mds_partial_layer_init(uint256[WIDTH] memory state) internal view returns (uint256[WIDTH] memory new_state) {
         new_state[0] = state[0];
 
-        for (uint256 r = 1; r < 12; r++) {
-            for (uint256 c = 1; c < 12; c++) {
-                new_state[c] = add(new_state[c], state[r] * FAST_PARTIAL_ROUND_INITIAL_MATRIX[r - 1][c - 1]);
+        unchecked {
+            for (uint256 r = 1; r < 12; r++) {
+                for (uint256 c = 1; c < 12; c++) {
+                    new_state[c] = new_state[c] + state[r] * FAST_PARTIAL_ROUND_INITIAL_MATRIX[r - 1][c - 1];
+                }
             }
         }
     }
 
+    // `state[i]` allows 193 bits number.
+    // `new_state[i]` is 64 bits number.
     function _mds_partial_layer_fast(uint256[WIDTH] memory state, uint256 r) internal view returns (uint256[WIDTH] memory new_state) {
-        uint256 d_sum = 0; // 160 bits
-        for (uint256 i = 1; i < 12; i++) {
-            d_sum = add(d_sum, state[i] * FAST_PARTIAL_ROUND_W_HATS[r][i - 1]);
-        }
+        uint256 d_sum = 0;
+        unchecked {
+            for (uint256 i = 1; i < 12; i++) {
+                d_sum += state[i] * FAST_PARTIAL_ROUND_W_HATS[r][i - 1];
+            }
 
-        new_state[0] = add(d_sum, state[0] * (MDS_MATRIX_CIRC[0] + MDS_MATRIX_DIAG[0])); // reduce?
-        for (uint256 i = 1; i < 12; i++)  {
-            new_state[i] = add(state[i], state[0] * FAST_PARTIAL_ROUND_VS[r][i - 1]);
+            new_state[0] = add(d_sum, state[0] * (MDS_MATRIX_CIRC_0 + MDS_MATRIX_DIAG_0));
+            for (uint256 i = 1; i < 12; i++)  {
+                new_state[i] = add(state[i], state[0] * FAST_PARTIAL_ROUND_VS[r][i - 1]);
+            }
         }
     }
 
-    function _partial_first_constant_layer(uint256[WIDTH] memory state) internal view returns (uint256[WIDTH] memory new_state) {
-        for (uint256 i = 0; i < 12; i++) {
-            new_state[i] = add(state[i], FAST_PARTIAL_FIRST_ROUND_CONSTANT[i]);
-        }
+    function _partial_first_constant_layer(uint256[WIDTH] memory state) internal pure returns (uint256[WIDTH] memory new_state) {
+        // for (uint256 i = 0; i < 12; i++) {
+        //     new_state[i] = add(state[i], FAST_PARTIAL_FIRST_ROUND_CONSTANT[i]);
+        // }
+        new_state[0] = add(state[0], FAST_PARTIAL_FIRST_ROUND_CONSTANT_0);
+        new_state[1] = add(state[1], FAST_PARTIAL_FIRST_ROUND_CONSTANT_1);
+        new_state[2] = add(state[2], FAST_PARTIAL_FIRST_ROUND_CONSTANT_2);
+        new_state[3] = add(state[3], FAST_PARTIAL_FIRST_ROUND_CONSTANT_3);
+        new_state[4] = add(state[4], FAST_PARTIAL_FIRST_ROUND_CONSTANT_4);
+        new_state[5] = add(state[5], FAST_PARTIAL_FIRST_ROUND_CONSTANT_5);
+        new_state[6] = add(state[6], FAST_PARTIAL_FIRST_ROUND_CONSTANT_6);
+        new_state[7] = add(state[7], FAST_PARTIAL_FIRST_ROUND_CONSTANT_7);
+        new_state[8] = add(state[8], FAST_PARTIAL_FIRST_ROUND_CONSTANT_8);
+        new_state[9] = add(state[9], FAST_PARTIAL_FIRST_ROUND_CONSTANT_9);
+        new_state[10] = add(state[10], FAST_PARTIAL_FIRST_ROUND_CONSTANT_10);
+        new_state[11] = add(state[11], FAST_PARTIAL_FIRST_ROUND_CONSTANT_11);
     }
 
     // `state[i]` allows 200 bits number.
@@ -682,22 +735,22 @@ contract Poseidon {
         returns (uint256[WIDTH] memory new_state)
     {
         unchecked {
-            for (uint256 i = 0; i < 12; i++) {
-                new_state[i] = add(state[i], ALL_ROUND_CONSTANTS[i + WIDTH * round_ctr]);
-            }
-            // uint256 base_index = WIDTH * round_ctr;
-            // new_state[0] = add(state[0], ALL_ROUND_CONSTANTS[base_index]);
-            // new_state[1] = add(state[1], ALL_ROUND_CONSTANTS[base_index + 1]);
-            // new_state[2] = add(state[2], ALL_ROUND_CONSTANTS[base_index + 2]);
-            // new_state[3] = add(state[3], ALL_ROUND_CONSTANTS[base_index + 3]);
-            // new_state[4] = add(state[4], ALL_ROUND_CONSTANTS[base_index + 4]);
-            // new_state[5] = add(state[5], ALL_ROUND_CONSTANTS[base_index + 5]);
-            // new_state[6] = add(state[6], ALL_ROUND_CONSTANTS[base_index + 6]);
-            // new_state[7] = add(state[7], ALL_ROUND_CONSTANTS[base_index + 7]);
-            // new_state[8] = add(state[8], ALL_ROUND_CONSTANTS[base_index + 8]);
-            // new_state[9] = add(state[9], ALL_ROUND_CONSTANTS[base_index + 9]);
-            // new_state[10] = add(state[10], ALL_ROUND_CONSTANTS[base_index + 10]);
-            // new_state[11] = add(state[11], ALL_ROUND_CONSTANTS[base_index + 11]);
+            // for (uint256 i = 0; i < 12; i++) {
+            //     new_state[i] = add(state[i], ALL_ROUND_CONSTANTS[i + WIDTH * round_ctr]);
+            // }
+            uint256 base_index = WIDTH * round_ctr;
+            new_state[0] = add(state[0], ALL_ROUND_CONSTANTS[base_index]);
+            new_state[1] = add(state[1], ALL_ROUND_CONSTANTS[base_index + 1]);
+            new_state[2] = add(state[2], ALL_ROUND_CONSTANTS[base_index + 2]);
+            new_state[3] = add(state[3], ALL_ROUND_CONSTANTS[base_index + 3]);
+            new_state[4] = add(state[4], ALL_ROUND_CONSTANTS[base_index + 4]);
+            new_state[5] = add(state[5], ALL_ROUND_CONSTANTS[base_index + 5]);
+            new_state[6] = add(state[6], ALL_ROUND_CONSTANTS[base_index + 6]);
+            new_state[7] = add(state[7], ALL_ROUND_CONSTANTS[base_index + 7]);
+            new_state[8] = add(state[8], ALL_ROUND_CONSTANTS[base_index + 8]);
+            new_state[9] = add(state[9], ALL_ROUND_CONSTANTS[base_index + 9]);
+            new_state[10] = add(state[10], ALL_ROUND_CONSTANTS[base_index + 10]);
+            new_state[11] = add(state[11], ALL_ROUND_CONSTANTS[base_index + 11]);
         }
     }
 
@@ -769,7 +822,7 @@ contract Poseidon {
 
         for (uint256 i = 0; i < N_PARTIAL_ROUNDS; i++) {
             state[0] = _sbox_monomial(state[0]);
-            state[0] = add(state[0], FAST_PARTIAL_ROUND_CONSTANTS[i]);
+            state[0] += FAST_PARTIAL_ROUND_CONSTANTS[i];
             state = _mds_partial_layer_fast(state, i);
         }
         round_ctr += N_PARTIAL_ROUNDS;
