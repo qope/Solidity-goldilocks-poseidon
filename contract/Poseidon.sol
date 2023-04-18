@@ -395,87 +395,144 @@ contract Poseidon {
         }
     }
 
-    function mds_row_shf(uint256 r, uint256[WIDTH] memory v) public view returns (uint256) {
-        uint256 res = 0;
-        for (uint256 i = 0; i < 12; i++) {
-            res += v[(i + r) % WIDTH] * MDS_MATRIX_CIRC[i]; // about 128 bits
+    // `v[r]` allows 192 bits number.
+    // `res` is 200 bits number.
+    function _mds_row_shf(uint256 r, uint256[WIDTH] memory v) internal view returns (uint256 res) {
+        // uint256 res = 0;
+        // for (uint256 i = 0; i < 12; i++) {
+        //     res += v[(i + r) % WIDTH] * MDS_MATRIX_CIRC[i]; // (192 + 8) bits
+        // }
+        unchecked {
+            res += v[r] * MDS_MATRIX_CIRC[0];
+            res += v[(r + 1) % WIDTH] * MDS_MATRIX_CIRC[1];
+            res += v[(r + 2) % WIDTH] * MDS_MATRIX_CIRC[2];
+            res += v[(r + 3) % WIDTH] * MDS_MATRIX_CIRC[3];
+            res += v[(r + 4) % WIDTH] * MDS_MATRIX_CIRC[4];
+            res += v[(r + 5) % WIDTH] * MDS_MATRIX_CIRC[5];
+            res += v[(r + 6) % WIDTH] * MDS_MATRIX_CIRC[6];
+            res += v[(r + 7) % WIDTH] * MDS_MATRIX_CIRC[7];
+            res += v[(r + 8) % WIDTH] * MDS_MATRIX_CIRC[8];
+            res += v[(r + 9) % WIDTH] * MDS_MATRIX_CIRC[9];
+            res += v[(r + 10) % WIDTH] * MDS_MATRIX_CIRC[10];
+            res += v[(r + 11) % WIDTH] * MDS_MATRIX_CIRC[11];
+
+            // res = add(res, v[r] * MDS_MATRIX_DIAG[r]);
+            if (r == 0) {
+                res += v[r] * 8; // 200 bits
+            }
         }
-        res = add(res, v[r] * MDS_MATRIX_DIAG[r]);
-        return res;
     }
 
-    function mds_layer(uint256[WIDTH] memory state) public view returns (uint256[WIDTH] memory) {
-        uint256[WIDTH] memory result;
-        for (uint256 r = 0; r < 12; r++) {
-            result[r] = mds_row_shf(r, state);
-        }
-        return result;
+    function _mds_layer(uint256[WIDTH] memory state) internal view returns (uint256[WIDTH] memory new_state) {
+        // for (uint256 r = 0; r < 12; r++) {
+        //     new_state[r] = _mds_row_shf(r, state);
+        // }
+        new_state[0] = _mds_row_shf(0, state);
+        new_state[1] = _mds_row_shf(1, state);
+        new_state[2] = _mds_row_shf(2, state);
+        new_state[3] = _mds_row_shf(3, state);
+        new_state[4] = _mds_row_shf(4, state);
+        new_state[5] = _mds_row_shf(5, state);
+        new_state[6] = _mds_row_shf(6, state);
+        new_state[7] = _mds_row_shf(7, state);
+        new_state[8] = _mds_row_shf(8, state);
+        new_state[9] = _mds_row_shf(9, state);
+        new_state[10] = _mds_row_shf(10, state);
+        new_state[11] = _mds_row_shf(11, state);
     }
 
-    function constant_layer(uint256[WIDTH] memory state, uint256 round_ctr)
-        public
+    // `state[i]` allows 200 bits number.
+    // `new_state[i]` is 64 bits number.
+    function _constant_layer(uint256[WIDTH] memory state, uint256 round_ctr)
+        internal
         view
-        returns (uint256[WIDTH] memory)
+        returns (uint256[WIDTH] memory new_state)
     {
-        for (uint256 i = 0; i < 12; i++) {
-            state[i] = add(state[i], ALL_ROUND_CONSTANTS[i + WIDTH * round_ctr]);
+        // for (uint256 i = 0; i < 12; i++) {
+        //     new_state[i] = add(state[i], ALL_ROUND_CONSTANTS[i + WIDTH * round_ctr]);
+        // }
+        unchecked {
+            new_state[0] = add(state[0], ALL_ROUND_CONSTANTS[WIDTH * round_ctr + 0]);
+            new_state[1] = add(state[1], ALL_ROUND_CONSTANTS[WIDTH * round_ctr + 1]);
+            new_state[2] = add(state[2], ALL_ROUND_CONSTANTS[WIDTH * round_ctr + 2]);
+            new_state[3] = add(state[3], ALL_ROUND_CONSTANTS[WIDTH * round_ctr + 3]);
+            new_state[4] = add(state[4], ALL_ROUND_CONSTANTS[WIDTH * round_ctr + 4]);
+            new_state[5] = add(state[5], ALL_ROUND_CONSTANTS[WIDTH * round_ctr + 5]);
+            new_state[6] = add(state[6], ALL_ROUND_CONSTANTS[WIDTH * round_ctr + 6]);
+            new_state[7] = add(state[7], ALL_ROUND_CONSTANTS[WIDTH * round_ctr + 7]);
+            new_state[8] = add(state[8], ALL_ROUND_CONSTANTS[WIDTH * round_ctr + 8]);
+            new_state[9] = add(state[9], ALL_ROUND_CONSTANTS[WIDTH * round_ctr + 9]);
+            new_state[10] = add(state[10], ALL_ROUND_CONSTANTS[WIDTH * round_ctr + 10]);
+            new_state[11] = add(state[11], ALL_ROUND_CONSTANTS[WIDTH * round_ctr + 11]);
         }
-        return state;
     }
 
-    function sbox_monomial(uint256 x) public pure returns (uint256) {
-        uint256 x2 = mul(x, x); // 64 bits
-        uint256 x4 = mul(x2, x2); // 64 bits
-        uint256 x3 = x * x2; // 128 bit
-        return mul(x3, x4);
-    }
-
-    function sbox_layer(uint256[WIDTH] memory state) public pure returns (uint256[WIDTH] memory) {
-        for (uint256 i = 0; i < 12; i++) {
-            state[i] = sbox_monomial(state[i]);
+    // `x` allows 64 bits number.
+    // `x7` is 192 bits number.
+    function _sbox_monomial(uint256 x) internal pure returns (uint256 x7) {
+        uint256 x3;
+        unchecked {
+            x3 = x * x * x; // 192 bits
         }
-        return state;
+        x3 = mod(x3); // 64 bits
+
+        unchecked {
+            x7 = x3 * x3 * x; // 192 bits
+        }
     }
 
-    function full_rounds(uint256[WIDTH] memory state, uint256 round_ctr)
-        public
+    function _sbox_layer(uint256[WIDTH] memory state) internal pure returns (uint256[WIDTH] memory new_state) {
+        for (uint256 i = 0; i < 12; i++) {
+            new_state[i] = _sbox_monomial(state[i]);
+        }
+    }
+
+    function _full_rounds(uint256[WIDTH] memory state, uint256 round_ctr)
+        internal
         view
         returns (uint256[WIDTH] memory, uint256)
     {
         for (uint256 i = 0; i < HALF_N_FULL_ROUNDS; i++) {
-            state = constant_layer(state, round_ctr);
-            state = sbox_layer(state);
-            state = mds_layer(state);
+            state = _constant_layer(state, round_ctr);
+            state = _sbox_layer(state);
+            state = _mds_layer(state);
             round_ctr += 1;
         }
 
         return (state, round_ctr);
     }
 
-    function partial_rounds(uint256[WIDTH] memory state, uint256 round_ctr)
-        public
+    function _partial_rounds(uint256[WIDTH] memory state, uint256 round_ctr)
+        internal
         view
         returns (uint256[WIDTH] memory, uint256)
     {
         for (uint256 i = 0; i < N_PARTIAL_ROUNDS; i++) {
-            state = constant_layer(state, round_ctr);
-            state[0] = sbox_monomial(state[0]);
-            state = mds_layer(state);
+            state = _constant_layer(state, round_ctr);
+            state[0] = _sbox_monomial(state[0]);
+            state = _mds_layer(state);
             round_ctr += 1;
         }
         return (state, round_ctr);
     }
 
-    function permute(uint256[WIDTH] memory state) public view returns (uint256[WIDTH] memory) {
+    function _permute(uint256[WIDTH] memory state) internal view returns (uint256[WIDTH] memory) {
         uint256 round_ctr = 0;
-        (state, round_ctr) = full_rounds(state, round_ctr);
-        (state, round_ctr) = partial_rounds(state, round_ctr);
-        (state, round_ctr) = full_rounds(state, round_ctr);
+        (state, round_ctr) = _full_rounds(state, round_ctr);
+        (state, round_ctr) = _partial_rounds(state, round_ctr);
+        (state, round_ctr) = _full_rounds(state, round_ctr);
+        for (uint256 i = 0; i < 12; i++) {
+            state[i] = mod(state[i]);
+        }
         require(round_ctr == N_ROUNDS);
         return state;
     }
 
-    function hash_n_to_m_no_pad(uint256[] memory input, uint256 num_outputs) public view returns (uint256[] memory) {
+    function permute(uint256[WIDTH] memory state) external view returns (uint256[WIDTH] memory) {
+        return _permute(state);
+    }
+
+    function _hash_n_to_m_no_pad(uint256[] memory input, uint256 num_outputs) internal view returns (uint256[] memory) {
         uint256[WIDTH] memory state;
         for (uint256 i = 0; i < WIDTH; i++) {
             state[i] = 0;
@@ -487,16 +544,20 @@ contract Poseidon {
             for (uint256 j = 0; j < SPONGE_RATE; j++) {
                 state[j] = input[i * SPONGE_RATE + j];
             }
-            state = permute(state);
+            state = _permute(state);
         }
         for (uint256 j = 0; j < last_round; j++) {
             state[j] = input[num_full_round * SPONGE_RATE + j];
         }
-        state = permute(state);
+        state = _permute(state);
         uint256[] memory output = new uint256[](num_outputs);
         for (uint256 j = 0; j < num_outputs; j++) {
             output[j] = state[j];
         }
         return output;
+    }
+
+    function hash_n_to_m_no_pad(uint256[] memory input, uint256 num_outputs) external view returns (uint256[] memory output) {
+        output = _hash_n_to_m_no_pad(input, num_outputs);
     }
 }
