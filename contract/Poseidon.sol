@@ -13,6 +13,18 @@ contract Poseidon {
     uint256 constant SPONGE_RATE = 8;
     uint256 constant ORDER = 18446744069414584321;
     uint256[12] MDS_MATRIX_CIRC = [17, 15, 41, 16, 2, 28, 13, 13, 39, 18, 34, 20];
+    uint256 constant MDS_MATRIX_CIRC_0 = 17;
+    uint256 constant MDS_MATRIX_CIRC_1 = 15;
+    uint256 constant MDS_MATRIX_CIRC_2 = 41;
+    uint256 constant MDS_MATRIX_CIRC_3 = 16;
+    uint256 constant MDS_MATRIX_CIRC_4 = 2;
+    uint256 constant MDS_MATRIX_CIRC_5 = 28;
+    uint256 constant MDS_MATRIX_CIRC_6 = 13;
+    uint256 constant MDS_MATRIX_CIRC_7 = 13;
+    uint256 constant MDS_MATRIX_CIRC_8 = 39;
+    uint256 constant MDS_MATRIX_CIRC_9 = 18;
+    uint256 constant MDS_MATRIX_CIRC_10 = 34;
+    uint256 constant MDS_MATRIX_CIRC_11 = 20;
     uint256[12] MDS_MATRIX_DIAG = [8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
     uint256[360] ALL_ROUND_CONSTANTS = [
@@ -398,35 +410,35 @@ contract Poseidon {
 
     // `v[r]` allows 192 bits number.
     // `res` is 200 bits number.
-    // 2244 ~ 2306 gas
-    function _mds_row_shf(uint256 r, uint256[WIDTH] memory v) internal view returns (uint256 res) {
+    // 1118 ~ 1180 gas
+    function _mds_row_shf(uint256 r, uint256[WIDTH] memory v) internal pure returns (uint256 res) {
         // uint256 res = 0;
         // for (uint256 i = 0; i < 12; i++) {
         //     res += v[(i + r) % WIDTH] * MDS_MATRIX_CIRC[i]; // (192 + 8) bits
         // }
         unchecked {
-            res += v[r] * MDS_MATRIX_CIRC[0];
-            res += v[(r + 1) % WIDTH] * MDS_MATRIX_CIRC[1];
-            res += v[(r + 2) % WIDTH] * MDS_MATRIX_CIRC[2];
-            res += v[(r + 3) % WIDTH] * MDS_MATRIX_CIRC[3];
-            res += v[(r + 4) % WIDTH] * MDS_MATRIX_CIRC[4];
-            res += v[(r + 5) % WIDTH] * MDS_MATRIX_CIRC[5];
-            res += v[(r + 6) % WIDTH] * MDS_MATRIX_CIRC[6];
-            res += v[(r + 7) % WIDTH] * MDS_MATRIX_CIRC[7];
-            res += v[(r + 8) % WIDTH] * MDS_MATRIX_CIRC[8];
-            res += v[(r + 9) % WIDTH] * MDS_MATRIX_CIRC[9];
-            res += v[(r + 10) % WIDTH] * MDS_MATRIX_CIRC[10];
-            res += v[(r + 11) % WIDTH] * MDS_MATRIX_CIRC[11];
+            res += v[r] * MDS_MATRIX_CIRC_0;
+            res += v[(r + 1) % WIDTH] * MDS_MATRIX_CIRC_1;
+            res += v[(r + 2) % WIDTH] * MDS_MATRIX_CIRC_2;
+            res += v[(r + 3) % WIDTH] * MDS_MATRIX_CIRC_3;
+            res += v[(r + 4) % WIDTH] * MDS_MATRIX_CIRC_4;
+            res += v[(r + 5) % WIDTH] * MDS_MATRIX_CIRC_5;
+            res += v[(r + 6) % WIDTH] * MDS_MATRIX_CIRC_6;
+            res += v[(r + 7) % WIDTH] * MDS_MATRIX_CIRC_7;
+            res += v[(r + 8) % WIDTH] * MDS_MATRIX_CIRC_8;
+            res += v[(r + 9) % WIDTH] * MDS_MATRIX_CIRC_9;
+            res += v[(r + 10) % WIDTH] * MDS_MATRIX_CIRC_10;
+            res += v[(r + 11) % WIDTH] * MDS_MATRIX_CIRC_11;
 
             // res = add(res, v[r] * MDS_MATRIX_DIAG[r]);
             if (r == 0) {
-                res += v[r] * 8; // 200 bits
+                res += v[0] * 8; // 200 bits
             }
         }
     }
 
     // 25881 gas
-    function _mds_layer(uint256[WIDTH] memory state) internal view returns (uint256[WIDTH] memory new_state) {
+    function _mds_layer(uint256[WIDTH] memory state) internal pure returns (uint256[WIDTH] memory new_state) {
         // for (uint256 r = 0; r < 12; r++) {
         //     new_state[r] = _mds_row_shf(r, state);
         // }
@@ -446,7 +458,7 @@ contract Poseidon {
 
     // `state[i]` allows 200 bits number.
     // `new_state[i]` is 64 bits number.
-    // 26743 gas (Can be improved to 1229 gas if all are expanded to inline.)
+    // 26743 gas (Can be improved to 469 gas if all are expanded to inline.)
     function _constant_layer(uint256[WIDTH] memory state, uint256 round_ctr)
         internal
         view
