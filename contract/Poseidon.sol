@@ -772,9 +772,18 @@ contract Poseidon {
     // 2250 gas (Can be improved to 1192 gas if all are expanded to inline.)
     function _sbox_layer(uint256[WIDTH] memory state) internal pure returns (uint256[WIDTH] memory new_state) {
         unchecked {
-            for (uint256 i = 0; i < 12; i++) {
-                new_state[i] = _sbox_monomial(state[i]);
-            }
+            new_state[0] = _sbox_monomial(state[0]);
+            new_state[1] = _sbox_monomial(state[1]);
+            new_state[2] = _sbox_monomial(state[2]);
+            new_state[3] = _sbox_monomial(state[3]);
+            new_state[4] = _sbox_monomial(state[4]);
+            new_state[5] = _sbox_monomial(state[5]);
+            new_state[6] = _sbox_monomial(state[6]);
+            new_state[7] = _sbox_monomial(state[7]);
+            new_state[8] = _sbox_monomial(state[8]);
+            new_state[9] = _sbox_monomial(state[9]);
+            new_state[10] = _sbox_monomial(state[10]);
+            new_state[11] = _sbox_monomial(state[11]);
         }
     }
 
