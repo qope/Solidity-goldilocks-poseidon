@@ -796,12 +796,29 @@ contract Poseidon {
         returns (uint256[WIDTH] memory, uint256)
     {
         unchecked {
-            for (uint256 i = 0; i < HALF_N_FULL_ROUNDS; i++) {
-                state = _constant_layer(state, round_ctr);
-                state = _sbox_layer(state);
-                state = _mds_layer(state);
-                round_ctr += 1;
-            }
+            state = _constant_layer(state, round_ctr);
+            state = _sbox_layer(state);
+            state = _mds_layer(state);
+            round_ctr += 1;
+            state = _constant_layer(state, round_ctr);
+            state = _sbox_layer(state);
+            state = _mds_layer(state);
+            round_ctr += 1;
+            state = _constant_layer(state, round_ctr);
+            state = _sbox_layer(state);
+            state = _mds_layer(state);
+            round_ctr += 1;
+            state = _constant_layer(state, round_ctr);
+            state = _sbox_layer(state);
+            state = _mds_layer(state);
+            round_ctr += 1;
+
+            // for (uint256 i = 0; i < HALF_N_FULL_ROUNDS; i++) {
+            //     state = _constant_layer(state, round_ctr);
+            //     state = _sbox_layer(state);
+            //     state = _mds_layer(state);
+            //     round_ctr += 1;
+            // }
         }
 
         return (state, round_ctr);
