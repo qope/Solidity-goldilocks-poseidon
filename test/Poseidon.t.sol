@@ -22,6 +22,5 @@ contract PoseidonTest is Test, Poseidon {
         assertEq(output[1], 2541896837400596712);
         assertEq(output[2], 5158482081674306993);
         assertEq(output[3], 15736419290823331982);
-        // memo forge build --sizes
     }
 }
