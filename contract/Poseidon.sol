@@ -965,66 +965,6 @@ contract Poseidon {
         }
     }
 
-    function _full_rounds_first(uint256[WIDTH] memory state)
-        internal
-        pure
-        returns (uint256[WIDTH] memory)
-    {
-        unchecked {
-            state = _constant_layer(state, 0);
-            state = _sbox_layer(state);
-            state = _mds_layer(state);
-            state = _constant_layer(state, 1);
-            state = _sbox_layer(state);
-            state = _mds_layer(state);
-            state = _constant_layer(state, 2);
-            state = _sbox_layer(state);
-            state = _mds_layer(state);
-            state = _constant_layer(state, 3);
-            state = _sbox_layer(state);
-            state = _mds_layer(state);
-
-            // for (uint256 i = 0; i < HALF_N_FULL_ROUNDS; i++) {
-            //     state = _constant_layer(state, round_ctr);
-            //     state = _sbox_layer(state);
-            //     state = _mds_layer(state);
-            //     round_ctr += 1;
-            // }
-        }
-
-        return state;
-    }
-
-    function _full_rounds_last(uint256[WIDTH] memory state)
-        internal
-        pure
-        returns (uint256[WIDTH] memory)
-    {
-        unchecked {
-            state = _constant_layer(state, HALF_N_FULL_ROUNDS + N_PARTIAL_ROUNDS);
-            state = _sbox_layer(state);
-            state = _mds_layer(state);
-            state = _constant_layer(state, HALF_N_FULL_ROUNDS + N_PARTIAL_ROUNDS + 1);
-            state = _sbox_layer(state);
-            state = _mds_layer(state);
-            state = _constant_layer(state, HALF_N_FULL_ROUNDS + N_PARTIAL_ROUNDS + 2);
-            state = _sbox_layer(state);
-            state = _mds_layer(state);
-            state = _constant_layer(state, HALF_N_FULL_ROUNDS + N_PARTIAL_ROUNDS + 3);
-            state = _sbox_layer(state);
-            state = _mds_layer(state);
-
-            // for (uint256 i = 0; i < HALF_N_FULL_ROUNDS; i++) {
-            //     state = _constant_layer(state, round_ctr);
-            //     state = _sbox_layer(state);
-            //     state = _mds_layer(state);
-            //     round_ctr += 1;
-            // }
-        }
-
-        return state;
-    }
-
     function _partial_rounds_fast(uint256[WIDTH] memory state)
         internal
         pure
@@ -1154,17 +1094,35 @@ contract Poseidon {
         return state;
     }
 
-    function _permute(uint256[WIDTH] memory state) internal pure returns (uint256[WIDTH] memory) {
-        // uint256 round_ctr = 0;
-        state = _full_rounds_first(state);
+    function _permute(uint256[WIDTH] memory state) internal pure returns (uint256[WIDTH] memory newState) {
+        state = _constant_layer(state, 0);
+        state = _sbox_layer(state);
+        state = _mds_layer(state);
+        state = _constant_layer(state, 1);
+        state = _sbox_layer(state);
+        state = _mds_layer(state);
+        state = _constant_layer(state, 2);
+        state = _sbox_layer(state);
+        state = _mds_layer(state);
+        state = _constant_layer(state, 3);
+        state = _sbox_layer(state);
+        state = _mds_layer(state);
         state = _partial_rounds_fast(state);
-        state = _full_rounds_last(state);
+        state = _constant_layer(state, 26);
+        state = _sbox_layer(state);
+        state = _mds_layer(state);
+        state = _constant_layer(state, 27);
+        state = _sbox_layer(state);
+        state = _mds_layer(state);
+        state = _constant_layer(state, 28);
+        state = _sbox_layer(state);
+        state = _mds_layer(state);
+        state = _constant_layer(state, 29);
+        state = _sbox_layer(state);
+        state = _mds_layer(state);
         for (uint256 i = 0; i < WIDTH; i++) {
-            state[i] = mod(state[i]);
+            newState[i] = mod(state[i]);
         }
-
-        // require(round_ctr == N_ROUNDS);
-        return state;
     }
 
     function permute(uint256[WIDTH] memory state) external pure returns (uint256[WIDTH] memory) {
