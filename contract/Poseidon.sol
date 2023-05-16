@@ -801,7 +801,7 @@ contract Poseidon {
         new_state[11] = add(state[11], FAST_PARTIAL_FIRST_ROUND_CONSTANT_11);
     }
 
-    function _getAllRoundConstant(uint256 index) private pure returns (uint256 roundConstant) {
+    function _getRoundConstant(uint256 index) private pure returns (uint256) {
         if (index == 0) return 0xb585f766f2144405;
         else if (index == 1) return 0x7746a55f43921ad7;
         else if (index == 2) return 0xb2fb0d31cee799b4;
@@ -904,28 +904,27 @@ contract Poseidon {
     // `state[i]` allows 200 bits number.
     // `new_state[i]` is 64 bits number.
     // 26743 gas (Can be improved to 469 gas if all are expanded to inline.)
-    function _constant_layer(uint256[WIDTH] memory state, uint256 round_ctr)
-        internal
-        pure
-        returns (uint256[WIDTH] memory new_state)
-    {
+    function _constant_layer(
+        uint256[WIDTH] memory state,
+        uint256 round_ctr
+    ) internal pure returns (uint256[WIDTH] memory new_state) {
         unchecked {
             // for (uint256 i = 0; i < 12; i++) {
             //     new_state[i] = add(state[i], ALL_ROUND_CONSTANTS[i + WIDTH * round_ctr]);
             // }
             uint256 base_index = WIDTH * round_ctr;
-            new_state[0] = add(state[0], _getAllRoundConstant(base_index));
-            new_state[1] = add(state[1], _getAllRoundConstant(base_index + 1));
-            new_state[2] = add(state[2], _getAllRoundConstant(base_index + 2));
-            new_state[3] = add(state[3], _getAllRoundConstant(base_index + 3));
-            new_state[4] = add(state[4], _getAllRoundConstant(base_index + 4));
-            new_state[5] = add(state[5], _getAllRoundConstant(base_index + 5));
-            new_state[6] = add(state[6], _getAllRoundConstant(base_index + 6));
-            new_state[7] = add(state[7], _getAllRoundConstant(base_index + 7));
-            new_state[8] = add(state[8], _getAllRoundConstant(base_index + 8));
-            new_state[9] = add(state[9], _getAllRoundConstant(base_index + 9));
-            new_state[10] = add(state[10], _getAllRoundConstant(base_index + 10));
-            new_state[11] = add(state[11], _getAllRoundConstant(base_index + 11));
+            new_state[0] = add(state[0], _getRoundConstant(base_index));
+            new_state[1] = add(state[1], _getRoundConstant(base_index + 1));
+            new_state[2] = add(state[2], _getRoundConstant(base_index + 2));
+            new_state[3] = add(state[3], _getRoundConstant(base_index + 3));
+            new_state[4] = add(state[4], _getRoundConstant(base_index + 4));
+            new_state[5] = add(state[5], _getRoundConstant(base_index + 5));
+            new_state[6] = add(state[6], _getRoundConstant(base_index + 6));
+            new_state[7] = add(state[7], _getRoundConstant(base_index + 7));
+            new_state[8] = add(state[8], _getRoundConstant(base_index + 8));
+            new_state[9] = add(state[9], _getRoundConstant(base_index + 9));
+            new_state[10] = add(state[10], _getRoundConstant(base_index + 10));
+            new_state[11] = add(state[11], _getRoundConstant(base_index + 11));
         }
     }
 
@@ -945,7 +944,9 @@ contract Poseidon {
     }
 
     // 2250 gas (Can be improved to 1192 gas if all are expanded to inline.)
-    function _sbox_layer(uint256[WIDTH] memory state) internal pure returns (uint256[WIDTH] memory new_state) {
+    function _sbox_layer(
+        uint256[WIDTH] memory state
+    ) internal pure returns (uint256[WIDTH] memory new_state) {
         unchecked {
             // for (uint256 i = 0; i < 12; i++) {
             //     new_state[i] = _sbox_monomial(state[i]);
@@ -965,7 +966,9 @@ contract Poseidon {
         }
     }
 
-    function _permute(uint256[WIDTH] memory state) internal pure returns (uint256[WIDTH] memory newState) {
+    function _permute(
+        uint256[WIDTH] memory state
+    ) internal pure returns (uint256[WIDTH] memory new_state) {
         // first full rounds
         state = _constant_layer(state, 0);
         state = _sbox_layer(state);
@@ -1043,22 +1046,24 @@ contract Poseidon {
         state = _sbox_layer(state);
         state = _mds_layer(state);
         for (uint256 i = 0; i < WIDTH; i++) {
-            newState[i] = mod(state[i]);
+            new_state[i] = mod(state[i]);
         }
     }
 
-    function permute(uint256[WIDTH] memory state) external pure returns (uint256[WIDTH] memory) {
+    function permute(
+        uint256[WIDTH] memory state
+    ) external pure returns (uint256[WIDTH] memory) {
         return _permute(state);
     }
 
-    function _hash_n_to_m_no_pad(uint256[] memory input, uint256 num_outputs) internal pure returns (uint256[] memory) {
-        uint256[WIDTH] memory state;
-        for (uint256 i = 0; i < WIDTH; i++) {
-            state[i] = 0;
-        }
+    function _hash_n_to_m_no_pad(
+        uint256[] memory input,
+        uint256 num_outputs
+    ) internal pure returns (uint256[] memory output) {
         uint256 num_full_round = input.length / SPONGE_RATE;
         uint256 last_round = input.length % SPONGE_RATE;
 
+        uint256[WIDTH] memory state;
         for (uint256 i = 0; i < num_full_round; i++) {
             for (uint256 j = 0; j < SPONGE_RATE; j++) {
                 state[j] = input[i * SPONGE_RATE + j];
@@ -1069,14 +1074,17 @@ contract Poseidon {
             state[j] = input[num_full_round * SPONGE_RATE + j];
         }
         state = _permute(state);
-        uint256[] memory output = new uint256[](num_outputs);
+
+        output = new uint256[](num_outputs);
         for (uint256 j = 0; j < num_outputs; j++) {
             output[j] = state[j];
         }
-        return output;
     }
 
-    function hash_n_to_m_no_pad(uint256[] memory input, uint256 num_outputs) external pure returns (uint256[] memory output) {
+    function hash_n_to_m_no_pad(
+        uint256[] memory input,
+        uint256 num_outputs
+    ) external pure returns (uint256[] memory output) {
         output = _hash_n_to_m_no_pad(input, num_outputs);
     }
 }

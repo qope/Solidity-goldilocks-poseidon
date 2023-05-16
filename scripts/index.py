@@ -362,7 +362,7 @@ def make_mds_partial_layer_init_inner(prefix=''):
 
 def make_all_round_constants(prefix=''):
     i = 0
-    tmp = prefix + 'function _getAllRoundConstant(uint256 index) private pure returns (uint256 roundConstant) {' \
+    tmp = prefix + 'function _getRoundConstant(uint256 index) private pure returns (uint256 roundConstant) {' \
         + prefix + INDENT + \
         f'if (index == {i}) return {ALL_ROUND_CONSTANTS[i]};'
 
