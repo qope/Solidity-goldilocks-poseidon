@@ -779,9 +779,6 @@ contract Poseidon {
                 new_state[9] = add(state[9], state[0] * 0x0000000000000010);
                 new_state[10] = add(state[10], state[0] * 0x0000000000000029);
                 new_state[11] = add(state[11], state[0] * 0x000000000000000f);
-            } else {
-                // なぜかこのelseをつけると878ガスが減る
-                revert("illegal n partial rounds");
             }
         }
     }
