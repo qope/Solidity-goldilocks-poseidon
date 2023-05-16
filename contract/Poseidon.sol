@@ -61,7 +61,10 @@ contract Poseidon {
     // `v[r]` allows 192 bits number.
     // `res` is 200 bits number.
     // 1118 ~ 1180 gas
-    function _mds_row_shf(uint256 r, uint256[WIDTH] memory v) internal pure returns (uint256 res) {
+    function _mds_row_shf(
+        uint256 r,
+        uint256[WIDTH] memory v
+    ) internal pure returns (uint256 res) {
         // uint256 res = 0;
         unchecked {
             // for (uint256 i = 0; i < 12; i++) {
@@ -88,7 +91,9 @@ contract Poseidon {
     }
 
     // 10614 gas
-    function _mds_layer(uint256[WIDTH] memory state) internal pure returns (uint256[WIDTH] memory new_state) {
+    function _mds_layer(
+        uint256[WIDTH] memory state
+    ) internal pure returns (uint256[WIDTH] memory new_state) {
         // for (uint256 r = 0; r < 12; r++) {
         //     new_state[r] = _mds_row_shf(r, state);
         // }
@@ -106,7 +111,9 @@ contract Poseidon {
         new_state[11] = _mds_row_shf(11, state);
     }
 
-    function _mds_partial_layer_init(uint256[WIDTH] memory state) internal pure returns (uint256[WIDTH] memory new_state) {
+    function _mds_partial_layer_init(
+        uint256[WIDTH] memory state
+    ) internal pure returns (uint256[WIDTH] memory new_state) {
         new_state[0] = state[0];
         
         unchecked {
@@ -236,14 +243,17 @@ contract Poseidon {
 
     // `state[i]` allows 193 bits number.
     // `new_state[i]` is 64 bits number.
-    function _mds_partial_layer_fast(uint256[WIDTH] memory state, uint256 r) internal pure returns (uint256[WIDTH] memory new_state) {
+    function _mds_partial_layer_fast(
+        uint256[WIDTH] memory state,
+        uint256 r
+    ) internal pure returns (uint256[WIDTH] memory new_state) {
         uint256 d_sum = 0;
         unchecked {
             // for (uint256 i = 1; i < 12; i++) {
             //     d_sum += state[i] * FAST_PARTIAL_ROUND_W_HATS[r][i - 1];
             // }
 
-            if(r == 0){
+            if (r == 0) {
                 d_sum += state[1] * 0x3d999c961b7c63b0;
                 d_sum += state[2] * 0x814e82efcd172529;
                 d_sum += state[3] * 0x2421e5d236704588;
@@ -511,11 +521,15 @@ contract Poseidon {
                 revert("illegal fast partial round w hats");
             }
 
-            new_state[0] = add(d_sum, state[0] * (MDS_MATRIX_CIRC_0 + MDS_MATRIX_DIAG_0));
+            new_state[0] = add(
+                d_sum,
+                state[0] * (MDS_MATRIX_CIRC_0 + MDS_MATRIX_DIAG_0)
+            );
+
             // for (uint256 i = 1; i < 12; i++)  {
             //     new_state[i] = add(state[i], state[0] * FAST_PARTIAL_ROUND_VS[r][i - 1]);
             // }
-            if(r == 0){
+            if (r == 0) {
                 new_state[1] = add(state[1], state[0] * 0x94877900674181c3);
                 new_state[2] = add(state[2], state[0] * 0xc6c67cc37a2a2bbd);
                 new_state[3] = add(state[3], state[0] * 0xd667c2055387940f);
@@ -783,7 +797,9 @@ contract Poseidon {
         }
     }
 
-    function _partial_first_constant_layer(uint256[WIDTH] memory state) internal pure returns (uint256[WIDTH] memory new_state) {
+    function _partial_first_constant_layer(
+        uint256[WIDTH] memory state
+    ) internal pure returns (uint256[WIDTH] memory new_state) {
         // for (uint256 i = 0; i < 12; i++) {
         //     new_state[i] = add(state[i], FAST_PARTIAL_FIRST_ROUND_CONSTANT[i]);
         // }
@@ -970,18 +986,10 @@ contract Poseidon {
         uint256[WIDTH] memory state
     ) internal pure returns (uint256[WIDTH] memory new_state) {
         // first full rounds
-        state = _constant_layer(state, 0);
-        state = _sbox_layer(state);
-        state = _mds_layer(state);
-        state = _constant_layer(state, 1);
-        state = _sbox_layer(state);
-        state = _mds_layer(state);
-        state = _constant_layer(state, 2);
-        state = _sbox_layer(state);
-        state = _mds_layer(state);
-        state = _constant_layer(state, 3);
-        state = _sbox_layer(state);
-        state = _mds_layer(state);
+        state = _mds_layer(_sbox_layer(_constant_layer(state, 0)));
+        state = _mds_layer(_sbox_layer(_constant_layer(state, 1)));
+        state = _mds_layer(_sbox_layer(_constant_layer(state, 2)));
+        state = _mds_layer(_sbox_layer(_constant_layer(state, 3)));
 
         // partial rounds
         state = _partial_first_constant_layer(state);
@@ -1033,18 +1041,10 @@ contract Poseidon {
         state = _mds_partial_layer_fast(state, 21);
 
         // second full rounds
-        state = _constant_layer(state, 26);
-        state = _sbox_layer(state);
-        state = _mds_layer(state);
-        state = _constant_layer(state, 27);
-        state = _sbox_layer(state);
-        state = _mds_layer(state);
-        state = _constant_layer(state, 28);
-        state = _sbox_layer(state);
-        state = _mds_layer(state);
-        state = _constant_layer(state, 29);
-        state = _sbox_layer(state);
-        state = _mds_layer(state);
+        state = _mds_layer(_sbox_layer(_constant_layer(state, 26)));
+        state = _mds_layer(_sbox_layer(_constant_layer(state, 27)));
+        state = _mds_layer(_sbox_layer(_constant_layer(state, 28)));
+        state = _mds_layer(_sbox_layer(_constant_layer(state, 29)));
         for (uint256 i = 0; i < WIDTH; i++) {
             new_state[i] = mod(state[i]);
         }
