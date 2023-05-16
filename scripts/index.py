@@ -39,9 +39,11 @@ INDENT = '    '
 
 def loop_each_c(c, prefix=''):
     r = 1
-    tmp = prefix + f'if (r == {r}) return {FAST_PARTIAL_ROUND_INITIAL_MATRIX[r - 1][c - 1]};'
+    tmp = prefix + \
+        f'if (r == {r}) return {FAST_PARTIAL_ROUND_INITIAL_MATRIX[r - 1][c - 1]};'
     for r in range(2, 12):
-        tmp += prefix + f'else if (r == {r}) return {FAST_PARTIAL_ROUND_INITIAL_MATRIX[r - 1][c - 1]};'
+        tmp += prefix + \
+            f'else if (r == {r}) return {FAST_PARTIAL_ROUND_INITIAL_MATRIX[r - 1][c - 1]};'
 
     return tmp
 
@@ -60,6 +62,26 @@ def make_function_inner(prefix=''):
     return tmp
 
 
+# def loop_mds_partial_layer_init_for_c
+def make_mds_partial_layer_init_inner(prefix=''):
+    tmp = prefix + 'new_state[0] = state[0];' \
+        + prefix \
+        + prefix + 'unchecked {'
+
+    for c in range(1, 12):
+        r = 1
+        tmp += prefix + f'    new_state[{c}] = state[{r}] * {FAST_PARTIAL_ROUND_INITIAL_MATRIX[r - 1][c - 1]}'
+
+        for r in range(2, 12):
+            tmp += prefix + f'        + state[{r}] * {FAST_PARTIAL_ROUND_INITIAL_MATRIX[r - 1][c - 1]}'
+        
+        tmp += ';'
+    
+    tmp += prefix + '}'
+    
+    return tmp
+
+
 def make_function(prefix=''):
     tmp = prefix + 'function getFastPartialRoundInitialMatrix(uint256 r, uint256 c) private pure returns (uint256 x) {' \
         + make_function_inner(prefix=prefix + INDENT) \
@@ -69,6 +91,7 @@ def make_function(prefix=''):
 
 
 if __name__ == '__main__':
-    tmp = make_function(prefix='\n' + INDENT) + '\n'
+    # tmp = make_function(prefix='\n' + INDENT) + '\n'
+    tmp = make_mds_partial_layer_init_inner(prefix='\n' + INDENT + INDENT) + '\n'
 
     print(tmp)
