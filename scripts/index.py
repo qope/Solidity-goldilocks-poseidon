@@ -38,14 +38,9 @@ INDENT = '    '
 
 
 def loop_each_r(r, prefix=''):
-    tmp = prefix + f'if (c == 1) ' + '{' \
-        + prefix + INDENT + f'return {FAST_PARTIAL_ROUND_INITIAL_MATRIX[r - 1][0]};'
+    tmp = prefix + f'if (c == 1) ' + f'return {FAST_PARTIAL_ROUND_INITIAL_MATRIX[r - 1][0]};'
     for c in range(2, 12):
-        tmp += prefix + '} ' + f'else if (c == {c}) ' + '{' \
-            + prefix + INDENT + f'return {FAST_PARTIAL_ROUND_INITIAL_MATRIX[r - 1][c - 1]};'
-    tmp += prefix + '} else {' \
-        + prefix + INDENT + 'revert("illegal argument");' \
-        + prefix + '}'
+        tmp += prefix + f'else if (c == {c}) ' + f'return {FAST_PARTIAL_ROUND_INITIAL_MATRIX[r - 1][c - 1]};'
 
     return tmp
 
