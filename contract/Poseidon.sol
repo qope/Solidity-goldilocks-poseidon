@@ -984,7 +984,7 @@ contract Poseidon {
 
     function _permute(
         uint256[WIDTH] memory state
-    ) internal pure returns (uint256[WIDTH] memory new_state) {
+    ) internal pure returns (uint256[WIDTH] memory) {
         // first full rounds
         state = _mds_layer(_sbox_layer(_constant_layer(state, 0)));
         state = _mds_layer(_sbox_layer(_constant_layer(state, 1)));
@@ -1045,17 +1045,20 @@ contract Poseidon {
         state = _mds_layer(_sbox_layer(_constant_layer(state, 27)));
         state = _mds_layer(_sbox_layer(_constant_layer(state, 28)));
         state = _mds_layer(_sbox_layer(_constant_layer(state, 29)));
+
+        return state;
+    }
+
+    function permute(
+        uint256[WIDTH] memory state
+    ) external pure returns (uint256[WIDTH] memory new_state) {
+        state = _permute(state);
         for (uint256 i = 0; i < WIDTH; i++) {
             new_state[i] = mod(state[i]);
         }
     }
 
-    function permute(
-        uint256[WIDTH] memory state
-    ) external pure returns (uint256[WIDTH] memory) {
-        return _permute(state);
-    }
-
+    // Require each input[i] is less than 2^256 - 2^64.
     function _hash_n_to_m_no_pad(
         uint256[] memory input,
         uint256 num_outputs
@@ -1077,7 +1080,7 @@ contract Poseidon {
 
         output = new uint256[](num_outputs);
         for (uint256 j = 0; j < num_outputs; j++) {
-            output[j] = state[j];
+            output[j] = mod(state[j]);
         }
     }
 
@@ -1085,6 +1088,9 @@ contract Poseidon {
         uint256[] memory input,
         uint256 num_outputs
     ) external pure returns (uint256[] memory output) {
+        for (uint256 i = 0; i < input.length; i++) {
+            input[i] = mod(input[i]);
+        }
         output = _hash_n_to_m_no_pad(input, num_outputs);
     }
 }
