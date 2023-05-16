@@ -208,6 +208,15 @@ FAST_PARTIAL_ROUND_INITIAL_MATRIX = [
      "0xdcedab70f40718ba", "0xe796d293a47a64cb", "0x80772dc2645b280b", ],
 ]
 
+FAST_PARTIAL_ROUND_CONSTANTS = [
+    "0x74cb2e819ae421ab", "0xd2559d2370e7f663", "0x62bf78acf843d17c", "0xd5ab7b67e14d1fb4",
+    "0xb9fe2ae6e0969bdc", "0xe33fdf79f92a10e8", "0x0ea2bb4c2b25989b", "0xca9121fbf9d38f06",
+    "0xbdd9b0aa81f58fa4", "0x83079fa4ecf20d7e", "0x650b838edfcc4ad3", "0x77180c88583c76ac",
+    "0xaf8c20753143a180", "0xb8ccfe9989a39175", "0x954a1729f60cc9c5", "0xdeb5b550c4dca53b",
+    "0xf01bb0b00f77011e", "0xa1ebb404b676afd9", "0x860b6e1597a0173e", "0x308bb65a036acbce",
+    "0x1aca78f31c97c876", "0x0000000000000000",
+]
+
 ALL_ROUND_CONSTANTS = [
     "0xb585f766f2144405", "0x7746a55f43921ad7", "0xb2fb0d31cee799b4", "0x0f6760a4803427d7",
     "0xe10d666650f4e012", "0x8cae14cb07d09bf1", "0xd438539c95f63e9f", "0xef781c7ce35b4c3d",
@@ -354,14 +363,17 @@ def make_mds_partial_layer_init_inner(prefix=''):
 def make_all_round_constants(prefix=''):
     i = 0
     tmp = prefix + 'function _getAllRoundConstant(uint256 index) private pure returns (uint256 roundConstant) {' \
-        + prefix + INDENT + f'if (index == {i}) return {ALL_ROUND_CONSTANTS[i]};'
-    
+        + prefix + INDENT + \
+        f'if (index == {i}) return {ALL_ROUND_CONSTANTS[i]};'
+
     for i in range(1, 48):
-        tmp += prefix + INDENT + f'else if (index == {i}) return {ALL_ROUND_CONSTANTS[i]};'
+        tmp += prefix + INDENT + \
+            f'else if (index == {i}) return {ALL_ROUND_CONSTANTS[i]};'
 
     for i in range(312, 360):
-        tmp += prefix + INDENT + f'else if (index == {i}) return {ALL_ROUND_CONSTANTS[i]};'
-    
+        tmp += prefix + INDENT + \
+            f'else if (index == {i}) return {ALL_ROUND_CONSTANTS[i]};'
+
     tmp += prefix + INDENT + 'revert("illegal index");' \
         + prefix + '}'
 
@@ -376,9 +388,35 @@ def make_get_fast_partial_round_initial_matrix(prefix=''):
     return tmp
 
 
+# state = _partial_first_constant_layer(state);
+# state = _mds_partial_layer_init(state);
+# for (uint256 i = 0; i < N_PARTIAL_ROUNDS; i++) {
+#     state[0] = _sbox_monomial(state[0]) + FAST_PARTIAL_ROUND_CONSTANTS[i];
+#     state = _mds_partial_layer_fast(state, i);
+# }
+def make_partial_rounds_inner(prefix=''):
+    tmp = prefix + 'state = _partial_first_constant_layer(state);' \
+        + prefix + 'state = _mds_partial_layer_init(state);'
+    for i in range(0, 22):
+        tmp += prefix + f'state[0] = _sbox_monomial(state[0]) + {FAST_PARTIAL_ROUND_CONSTANTS[i]};' \
+            + prefix + f'state = _mds_partial_layer_fast(state, {i});'
+
+    return tmp
+
+
+def make_partial_rounds(prefix=''):
+    tmp = prefix + 'function _partialRounds(uint256[WIDTH] memory state) private pure returns (uint256[WIDTH] memory) {' \
+        + make_partial_rounds_inner(prefix=prefix + INDENT) \
+        + prefix + '    return state;' \
+        + prefix + '}'
+
+    return tmp
+
+
 if __name__ == '__main__':
     # tmp = make_get_fast_partial_round_initial_matrix(prefix='\n' + INDENT) + '\n'
     # tmp = make_mds_partial_layer_init_inner(prefix='\n' + INDENT + INDENT) + '\n'
-    tmp = make_all_round_constants(prefix='\n' + INDENT) + '\n'
+    # tmp = make_all_round_constants(prefix='\n' + INDENT) + '\n'
+    tmp = make_partial_rounds(prefix='\n' + INDENT) + '\n'
 
     print(tmp)

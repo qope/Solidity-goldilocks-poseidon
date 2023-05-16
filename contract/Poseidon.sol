@@ -984,120 +984,49 @@ contract Poseidon {
         state = _partial_first_constant_layer(state);
         state = _mds_partial_layer_init(state);
 
-        // for (uint256 i = 0; i < N_PARTIAL_ROUNDS; i++) {
-        //     state[0] = _sbox_monomial(state[0]);
-        //     state[0] += FAST_PARTIAL_ROUND_CONSTANTS[i];
-        //     state = _mds_partial_layer_fast(state, i);
-        // }
-
-        // 0
-        state[0] = _sbox_monomial(state[0]);
-        state[0] += 0x74cb2e819ae421ab;
+        state[0] = _sbox_monomial(state[0]) + 0x74cb2e819ae421ab;
         state = _mds_partial_layer_fast(state, 0);
-
-        // 1
-        state[0] = _sbox_monomial(state[0]);
-        state[0] += 0xd2559d2370e7f663;
+        state[0] = _sbox_monomial(state[0]) + 0xd2559d2370e7f663;
         state = _mds_partial_layer_fast(state, 1);
-
-        // 2
-        state[0] = _sbox_monomial(state[0]);
-        state[0] += 0x62bf78acf843d17c;
+        state[0] = _sbox_monomial(state[0]) + 0x62bf78acf843d17c;
         state = _mds_partial_layer_fast(state, 2);
-
-        // 3
-        state[0] = _sbox_monomial(state[0]);
-        state[0] += 0xd5ab7b67e14d1fb4;
+        state[0] = _sbox_monomial(state[0]) + 0xd5ab7b67e14d1fb4;
         state = _mds_partial_layer_fast(state, 3);
-
-        // 4
-        state[0] = _sbox_monomial(state[0]);
-        state[0] += 0xb9fe2ae6e0969bdc;
+        state[0] = _sbox_monomial(state[0]) + 0xb9fe2ae6e0969bdc;
         state = _mds_partial_layer_fast(state, 4);
-
-        // 5
-        state[0] = _sbox_monomial(state[0]);
-        state[0] += 0xe33fdf79f92a10e8;
+        state[0] = _sbox_monomial(state[0]) + 0xe33fdf79f92a10e8;
         state = _mds_partial_layer_fast(state, 5);
-
-        // 6
-        state[0] = _sbox_monomial(state[0]);
-        state[0] += 0x0ea2bb4c2b25989b;
+        state[0] = _sbox_monomial(state[0]) + 0x0ea2bb4c2b25989b;
         state = _mds_partial_layer_fast(state, 6);
-
-        // 7
-        state[0] = _sbox_monomial(state[0]);
-        state[0] += 0xca9121fbf9d38f06;
+        state[0] = _sbox_monomial(state[0]) + 0xca9121fbf9d38f06;
         state = _mds_partial_layer_fast(state, 7);
-
-        // 8
-        state[0] = _sbox_monomial(state[0]);
-        state[0] += 0xbdd9b0aa81f58fa4;
+        state[0] = _sbox_monomial(state[0]) + 0xbdd9b0aa81f58fa4;
         state = _mds_partial_layer_fast(state, 8);
-
-        // 9
-        state[0] = _sbox_monomial(state[0]);
-        state[0] += 0x83079fa4ecf20d7e;
+        state[0] = _sbox_monomial(state[0]) + 0x83079fa4ecf20d7e;
         state = _mds_partial_layer_fast(state, 9);
-
-        // 10
-        state[0] = _sbox_monomial(state[0]);
-        state[0] += 0x650b838edfcc4ad3;
+        state[0] = _sbox_monomial(state[0]) + 0x650b838edfcc4ad3;
         state = _mds_partial_layer_fast(state, 10);
-
-        // 11
-        state[0] = _sbox_monomial(state[0]);
-        state[0] += 0x77180c88583c76ac;
+        state[0] = _sbox_monomial(state[0]) + 0x77180c88583c76ac;
         state = _mds_partial_layer_fast(state, 11);
-
-        // 12
-        state[0] = _sbox_monomial(state[0]);
-        state[0] += 0xaf8c20753143a180;
+        state[0] = _sbox_monomial(state[0]) + 0xaf8c20753143a180;
         state = _mds_partial_layer_fast(state, 12);
-
-        // 13
-        state[0] = _sbox_monomial(state[0]);
-        state[0] += 0xb8ccfe9989a39175;
+        state[0] = _sbox_monomial(state[0]) + 0xb8ccfe9989a39175;
         state = _mds_partial_layer_fast(state, 13);
-
-        // 14
-        state[0] = _sbox_monomial(state[0]);
-        state[0] += 0x954a1729f60cc9c5;
+        state[0] = _sbox_monomial(state[0]) + 0x954a1729f60cc9c5;
         state = _mds_partial_layer_fast(state, 14);
-
-        // 15
-        state[0] = _sbox_monomial(state[0]);
-        state[0] += 0xdeb5b550c4dca53b;
+        state[0] = _sbox_monomial(state[0]) + 0xdeb5b550c4dca53b;
         state = _mds_partial_layer_fast(state, 15);
-
-        // 16
-        state[0] = _sbox_monomial(state[0]);
-        state[0] += 0xf01bb0b00f77011e;
+        state[0] = _sbox_monomial(state[0]) + 0xf01bb0b00f77011e;
         state = _mds_partial_layer_fast(state, 16);
-
-        // 17
-        state[0] = _sbox_monomial(state[0]);
-        state[0] += 0xa1ebb404b676afd9;
+        state[0] = _sbox_monomial(state[0]) + 0xa1ebb404b676afd9;
         state = _mds_partial_layer_fast(state, 17);
-
-        // 18
-        state[0] = _sbox_monomial(state[0]);
-        state[0] += 0x860b6e1597a0173e;
+        state[0] = _sbox_monomial(state[0]) + 0x860b6e1597a0173e;
         state = _mds_partial_layer_fast(state, 18);
-
-        // 19
-        state[0] = _sbox_monomial(state[0]);
-        state[0] += 0x308bb65a036acbce;
+        state[0] = _sbox_monomial(state[0]) + 0x308bb65a036acbce;
         state = _mds_partial_layer_fast(state, 19);
-
-        // 20
-        state[0] = _sbox_monomial(state[0]);
-        state[0] += 0x1aca78f31c97c876;
+        state[0] = _sbox_monomial(state[0]) + 0x1aca78f31c97c876;
         state = _mds_partial_layer_fast(state, 20);
-
-        // 21
-        state[0] = _sbox_monomial(state[0]);
-        state[0] += 0x0;
+        state[0] = _sbox_monomial(state[0]) + 0x0000000000000000;
         state = _mds_partial_layer_fast(state, 21);
 
         // second full rounds
