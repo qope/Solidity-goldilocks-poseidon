@@ -40,368 +40,368 @@ contract Poseidon {
     uint256 constant FAST_PARTIAL_FIRST_ROUND_CONSTANT_10 = 0x60936af96ee2f148;
     uint256 constant FAST_PARTIAL_FIRST_ROUND_CONSTANT_11 = 0xc33448feadc78f0c;
 
-    uint256[360] ALL_ROUND_CONSTANTS = [
-        0xb585f766f2144405,
-        0x7746a55f43921ad7,
-        0xb2fb0d31cee799b4,
-        0x0f6760a4803427d7,
-        0xe10d666650f4e012,
-        0x8cae14cb07d09bf1,
-        0xd438539c95f63e9f,
-        0xef781c7ce35b4c3d,
-        0xcdc4a239b0c44426,
-        0x277fa208bf337bff,
-        0xe17653a29da578a1,
-        0xc54302f225db2c76,
-        0x86287821f722c881,
-        0x59cd1a8a41c18e55,
-        0xc3b919ad495dc574,
-        0xa484c4c5ef6a0781,
-        0x308bbd23dc5416cc,
-        0x6e4a40c18f30c09c,
-        0x9a2eedb70d8f8cfa,
-        0xe360c6e0ae486f38,
-        0xd5c7718fbfc647fb,
-        0xc35eae071903ff0b,
-        0x849c2656969c4be7,
-        0xc0572c8c08cbbbad,
-        0xe9fa634a21de0082,
-        0xf56f6d48959a600d,
-        0xf7d713e806391165,
-        0x8297132b32825daf,
-        0xad6805e0e30b2c8a,
-        0xac51d9f5fcf8535e,
-        0x502ad7dc18c2ad87,
-        0x57a1550c110b3041,
-        0x66bbd30e6ce0e583,
-        0x0da2abef589d644e,
-        0xf061274fdb150d61,
-        0x28b8ec3ae9c29633,
-        0x92a756e67e2b9413,
-        0x70e741ebfee96586,
-        0x019d5ee2af82ec1c,
-        0x6f6f2ed772466352,
-        0x7cf416cfe7e14ca1,
-        0x61df517b86a46439,
-        0x85dc499b11d77b75,
-        0x4b959b48b9c10733,
-        0xe8be3e5da8043e57,
-        0xf5c0bc1de6da8699,
-        0x40b12cbf09ef74bf,
-        0xa637093ecb2ad631,
-        0x3cc3f892184df408,
-        0x2e479dc157bf31bb,
-        0x6f49de07a6234346,
-        0x213ce7bede378d7b,
-        0x5b0431345d4dea83,
-        0xa2de45780344d6a1,
-        0x7103aaf94a7bf308,
-        0x5326fc0d97279301,
-        0xa9ceb74fec024747,
-        0x27f8ec88bb21b1a3,
-        0xfceb4fda1ded0893,
-        0xfac6ff1346a41675,
-        0x7131aa45268d7d8c,
-        0x9351036095630f9f,
-        0xad535b24afc26bfb,
-        0x4627f5c6993e44be,
-        0x645cf794b8f1cc58,
-        0x241c70ed0af61617,
-        0xacb8e076647905f1,
-        0x3737e9db4c4f474d,
-        0xe7ea5e33e75fffb6,
-        0x90dee49fc9bfc23a,
-        0xd1b1edf76bc09c92,
-        0x0b65481ba645c602,
-        0x99ad1aab0814283b,
-        0x438a7c91d416ca4d,
-        0xb60de3bcc5ea751c,
-        0xc99cab6aef6f58bc,
-        0x69a5ed92a72ee4ff,
-        0x5e7b329c1ed4ad71,
-        0x5fc0ac0800144885,
-        0x32db829239774eca,
-        0x0ade699c5830f310,
-        0x7cc5583b10415f21,
-        0x85df9ed2e166d64f,
-        0x6604df4fee32bcb1,
-        0xeb84f608da56ef48,
-        0xda608834c40e603d,
-        0x8f97fe408061f183,
-        0xa93f485c96f37b89,
-        0x6704e8ee8f18d563,
-        0xcee3e9ac1e072119,
-        0x510d0e65e2b470c1,
-        0xf6323f486b9038f0,
-        0x0b508cdeffa5ceef,
-        0xf2417089e4fb3cbd,
-        0x60e75c2890d15730,
-        0xa6217d8bf660f29c,
-        0x7159cd30c3ac118e,
-        0x839b4e8fafead540,
-        0x0d3f3e5e82920adc,
-        0x8f7d83bddee7bba8,
-        0x780f2243ea071d06,
-        0xeb915845f3de1634,
-        0xd19e120d26b6f386,
-        0x016ee53a7e5fecc6,
-        0xcb5fd54e7933e477,
-        0xacb8417879fd449f,
-        0x9c22190be7f74732,
-        0x5d693c1ba3ba3621,
-        0xdcef0797c2b69ec7,
-        0x3d639263da827b13,
-        0xe273fd971bc8d0e7,
-        0x418f02702d227ed5,
-        0x8c25fda3b503038c,
-        0x2cbaed4daec8c07c,
-        0x5f58e6afcdd6ddc2,
-        0x284650ac5e1b0eba,
-        0x635b337ee819dab5,
-        0x9f9a036ed4f2d49f,
-        0xb93e260cae5c170e,
-        0xb0a7eae879ddb76d,
-        0xd0762cbc8ca6570c,
-        0x34c6efb812b04bf5,
-        0x40bf0ab5fa14c112,
-        0xb6b570fc7c5740d3,
-        0x5a27b9002de33454,
-        0xb1a5b165b6d2b2d2,
-        0x8722e0ace9d1be22,
-        0x788ee3b37e5680fb,
-        0x14a726661551e284,
-        0x98b7672f9ef3b419,
-        0xbb93ae776bb30e3a,
-        0x28fd3b046380f850,
-        0x30a4680593258387,
-        0x337dc00c61bd9ce1,
-        0xd5eca244c7a4ff1d,
-        0x7762638264d279bd,
-        0xc1e434bedeefd767,
-        0x0299351a53b8ec22,
-        0xb2d456e4ad251b80,
-        0x3e9ed1fda49cea0b,
-        0x2972a92ba450bed8,
-        0x20216dd77be493de,
-        0xadffe8cf28449ec6,
-        0x1c4dbb1c4c27d243,
-        0x15a16a8a8322d458,
-        0x388a128b7fd9a609,
-        0x2300e5d6baedf0fb,
-        0x2f63aa8647e15104,
-        0xf1c36ce86ecec269,
-        0x27181125183970c9,
-        0xe584029370dca96d,
-        0x4d9bbc3e02f1cfb2,
-        0xea35bc29692af6f8,
-        0x18e21b4beabb4137,
-        0x1e3b9fc625b554f4,
-        0x25d64362697828fd,
-        0x5a3f1bb1c53a9645,
-        0xdb7f023869fb8d38,
-        0xb462065911d4e1fc,
-        0x49c24ae4437d8030,
-        0xd793862c112b0566,
-        0xaadd1106730d8feb,
-        0xc43b6e0e97b0d568,
-        0xe29024c18ee6fca2,
-        0x5e50c27535b88c66,
-        0x10383f20a4ff9a87,
-        0x38e8ee9d71a45af8,
-        0xdd5118375bf1a9b9,
-        0x775005982d74d7f7,
-        0x86ab99b4dde6c8b0,
-        0xb1204f603f51c080,
-        0xef61ac8470250ecf,
-        0x1bbcd90f132c603f,
-        0x0cd1dabd964db557,
-        0x11a3ae5beb9d1ec9,
-        0xf755bfeea585d11d,
-        0xa3b83250268ea4d7,
-        0x516306f4927c93af,
-        0xddb4ac49c9efa1da,
-        0x64bb6dec369d4418,
-        0xf9cc95c22b4c1fcc,
-        0x08d37f755f4ae9f6,
-        0xeec49b613478675b,
-        0xf143933aed25e0b0,
-        0xe4c5dd8255dfc622,
-        0xe7ad7756f193198e,
-        0x92c2318b87fff9cb,
-        0x739c25f8fd73596d,
-        0x5636cac9f16dfed0,
-        0xdd8f909a938e0172,
-        0xc6401fe115063f5b,
-        0x8ad97b33f1ac1455,
-        0x0c49366bb25e8513,
-        0x0784d3d2f1698309,
-        0x530fb67ea1809a81,
-        0x410492299bb01f49,
-        0x139542347424b9ac,
-        0x9cb0bd5ea1a1115e,
-        0x02e3f615c38f49a1,
-        0x985d4f4a9c5291ef,
-        0x775b9feafdcd26e7,
-        0x304265a6384f0f2d,
-        0x593664c39773012c,
-        0x4f0a2e5fb028f2ce,
-        0xdd611f1000c17442,
-        0xd8185f9adfea4fd0,
-        0xef87139ca9a3ab1e,
-        0x3ba71336c34ee133,
-        0x7d3a455d56b70238,
-        0x660d32e130182684,
-        0x297a863f48cd1f43,
-        0x90e0a736a751ebb7,
-        0x549f80ce550c4fd3,
-        0x0f73b2922f38bd64,
-        0x16bf1f73fb7a9c3f,
-        0x6d1f5a59005bec17,
-        0x02ff876fa5ef97c4,
-        0xc5cb72a2a51159b0,
-        0x8470f39d2d5c900e,
-        0x25abb3f1d39fcb76,
-        0x23eb8cc9b372442f,
-        0xd687ba55c64f6364,
-        0xda8d9e90fd8ff158,
-        0xe3cbdc7d2fe45ea7,
-        0xb9a8c9b3aee52297,
-        0xc0d28a5c10960bd3,
-        0x45d7ac9b68f71a34,
-        0xeeb76e397069e804,
-        0x3d06c8bd1514e2d9,
-        0x9c9c98207cb10767,
-        0x65700b51aedfb5ef,
-        0x911f451539869408,
-        0x7ae6849fbc3a0ec6,
-        0x3bb340eba06afe7e,
-        0xb46e9d8b682ea65e,
-        0x8dcf22f9a3b34356,
-        0x77bdaeda586257a7,
-        0xf19e400a5104d20d,
-        0xc368a348e46d950f,
-        0x9ef1cd60e679f284,
-        0xe89cd854d5d01d33,
-        0x5cd377dc8bb882a2,
-        0xa7b0fb7883eee860,
-        0x7684403ec392950d,
-        0x5fa3f06f4fed3b52,
-        0x8df57ac11bc04831,
-        0x2db01efa1e1e1897,
-        0x54846de4aadb9ca2,
-        0xba6745385893c784,
-        0x541d496344d2c75b,
-        0xe909678474e687fe,
-        0xdfe89923f6c9c2ff,
-        0xece5a71e0cfedc75,
-        0x5ff98fd5d51fe610,
-        0x83e8941918964615,
-        0x5922040b47f150c1,
-        0xf97d750e3dd94521,
-        0x5080d4c2b86f56d7,
-        0xa7de115b56c78d70,
-        0x6a9242ac87538194,
-        0xf7856ef7f9173e44,
-        0x2265fc92feb0dc09,
-        0x17dfc8e4f7ba8a57,
-        0x9001a64209f21db8,
-        0x90004c1371b893c5,
-        0xb932b7cf752e5545,
-        0xa0b1df81b6fe59fc,
-        0x8ef1dd26770af2c2,
-        0x0541a4f9cfbeed35,
-        0x9e61106178bfc530,
-        0xb3767e80935d8af2,
-        0x0098d5782065af06,
-        0x31d191cd5c1466c7,
-        0x410fefafa319ac9d,
-        0xbdf8f242e316c4ab,
-        0x9e8cd55b57637ed0,
-        0xde122bebe9a39368,
-        0x4d001fd58f002526,
-        0xca6637000eb4a9f8,
-        0x2f2339d624f91f78,
-        0x6d1a7918c80df518,
-        0xdf9a4939342308e9,
-        0xebc2151ee6c8398c,
-        0x03cc2ba8a1116515,
-        0xd341d037e840cf83,
-        0x387cb5d25af4afcc,
-        0xbba2515f22909e87,
-        0x7248fe7705f38e47,
-        0x4d61e56a525d225a,
-        0x262e963c8da05d3d,
-        0x59e89b094d220ec2,
-        0x055d5b52b78b9c5e,
-        0x82b27eb33514ef99,
-        0xd30094ca96b7ce7b,
-        0xcf5cb381cd0a1535,
-        0xfeed4db6919e5a7c,
-        0x41703f53753be59f,
-        0x5eeea940fcde8b6f,
-        0x4cd1f1b175100206,
-        0x4a20358574454ec0,
-        0x1478d361dbbf9fac,
-        0x6f02dc07d141875c,
-        0x296a202ed8e556a2,
-        0x2afd67999bf32ee5,
-        0x7acfd96efa95491d,
-        0x6798ba0c0abb2c6d,
-        0x34c6f57b26c92122,
-        0x5736e1bad206b5de,
-        0x20057d2a0056521b,
-        0x3dea5bd5d0578bd7,
-        0x16e50d897d4634ac,
-        0x29bff3ecb9b7a6e3,
-        0x475cd3205a3bdcde,
-        0x18a42105c31b7e88,
-        0x023e7414af663068,
-        0x15147108121967d7,
-        0xe4a3dff1d7d6fef9,
-        0x01a8d1a588085737,
-        0x11b4c74eda62beef,
-        0xe587cc0d69a73346,
-        0x1ff7327017aa2a6e,
-        0x594e29c42473d06b,
-        0xf6f31db1899b12d5,
-        0xc02ac5e47312d3ca,
-        0xe70201e960cb78b8,
-        0x6f90ff3b6a65f108,
-        0x42747a7245e7fa84,
-        0xd1f507e43ab749b2,
-        0x1c86d265f15750cd,
-        0x3996ce73dd832c1c,
-        0x8e7fba02983224bd,
-        0xba0dec7103255dd4,
-        0x9e9cbd781628fc5b,
-        0xdae8645996edd6a5,
-        0xdebe0853b1a1d378,
-        0xa49229d24d014343,
-        0x7be5b9ffda905e1c,
-        0xa3c95eaec244aa30,
-        0x0230bca8f4df0544,
-        0x4135c2bebfe148c6,
-        0x166fc0cc438a3c72,
-        0x3762b59a8ae83efa,
-        0xe8928a4c89114750,
-        0x2a440b51a4945ee5,
-        0x80cefd2b7d99ff83,
-        0xbb9879c6e61fd62a,
-        0x6e7c8f1a84265034,
-        0x164bb2de1bbeddc8,
-        0xf3c12fe54d5c653b,
-        0x40b9e922ed9771e2,
-        0x551f5b0fbe7b1840,
-        0x25032aa7c4cb1811,
-        0xaaed34074b164346,
-        0x8ffd96bbf9c9c81d,
-        0x70fc91eb5937085c,
-        0x7f795e2a5f915440,
-        0x4543d9df5476d3cb,
-        0xf172d73e004fc90d,
-        0xdfd1c4febcc81238,
-        0xbc8dfb627fe558fc
-    ];
+    // uint256[360] ALL_ROUND_CONSTANTS = [
+    //     0xb585f766f2144405,
+    //     0x7746a55f43921ad7,
+    //     0xb2fb0d31cee799b4,
+    //     0x0f6760a4803427d7,
+    //     0xe10d666650f4e012,
+    //     0x8cae14cb07d09bf1,
+    //     0xd438539c95f63e9f,
+    //     0xef781c7ce35b4c3d,
+    //     0xcdc4a239b0c44426,
+    //     0x277fa208bf337bff,
+    //     0xe17653a29da578a1,
+    //     0xc54302f225db2c76,
+    //     0x86287821f722c881,
+    //     0x59cd1a8a41c18e55,
+    //     0xc3b919ad495dc574,
+    //     0xa484c4c5ef6a0781,
+    //     0x308bbd23dc5416cc,
+    //     0x6e4a40c18f30c09c,
+    //     0x9a2eedb70d8f8cfa,
+    //     0xe360c6e0ae486f38,
+    //     0xd5c7718fbfc647fb,
+    //     0xc35eae071903ff0b,
+    //     0x849c2656969c4be7,
+    //     0xc0572c8c08cbbbad,
+    //     0xe9fa634a21de0082,
+    //     0xf56f6d48959a600d,
+    //     0xf7d713e806391165,
+    //     0x8297132b32825daf,
+    //     0xad6805e0e30b2c8a,
+    //     0xac51d9f5fcf8535e,
+    //     0x502ad7dc18c2ad87,
+    //     0x57a1550c110b3041,
+    //     0x66bbd30e6ce0e583,
+    //     0x0da2abef589d644e,
+    //     0xf061274fdb150d61,
+    //     0x28b8ec3ae9c29633,
+    //     0x92a756e67e2b9413,
+    //     0x70e741ebfee96586,
+    //     0x019d5ee2af82ec1c,
+    //     0x6f6f2ed772466352,
+    //     0x7cf416cfe7e14ca1,
+    //     0x61df517b86a46439,
+    //     0x85dc499b11d77b75,
+    //     0x4b959b48b9c10733,
+    //     0xe8be3e5da8043e57,
+    //     0xf5c0bc1de6da8699,
+    //     0x40b12cbf09ef74bf,
+    //     0xa637093ecb2ad631,
+    //     0x3cc3f892184df408,
+    //     0x2e479dc157bf31bb,
+    //     0x6f49de07a6234346,
+    //     0x213ce7bede378d7b,
+    //     0x5b0431345d4dea83,
+    //     0xa2de45780344d6a1,
+    //     0x7103aaf94a7bf308,
+    //     0x5326fc0d97279301,
+    //     0xa9ceb74fec024747,
+    //     0x27f8ec88bb21b1a3,
+    //     0xfceb4fda1ded0893,
+    //     0xfac6ff1346a41675,
+    //     0x7131aa45268d7d8c,
+    //     0x9351036095630f9f,
+    //     0xad535b24afc26bfb,
+    //     0x4627f5c6993e44be,
+    //     0x645cf794b8f1cc58,
+    //     0x241c70ed0af61617,
+    //     0xacb8e076647905f1,
+    //     0x3737e9db4c4f474d,
+    //     0xe7ea5e33e75fffb6,
+    //     0x90dee49fc9bfc23a,
+    //     0xd1b1edf76bc09c92,
+    //     0x0b65481ba645c602,
+    //     0x99ad1aab0814283b,
+    //     0x438a7c91d416ca4d,
+    //     0xb60de3bcc5ea751c,
+    //     0xc99cab6aef6f58bc,
+    //     0x69a5ed92a72ee4ff,
+    //     0x5e7b329c1ed4ad71,
+    //     0x5fc0ac0800144885,
+    //     0x32db829239774eca,
+    //     0x0ade699c5830f310,
+    //     0x7cc5583b10415f21,
+    //     0x85df9ed2e166d64f,
+    //     0x6604df4fee32bcb1,
+    //     0xeb84f608da56ef48,
+    //     0xda608834c40e603d,
+    //     0x8f97fe408061f183,
+    //     0xa93f485c96f37b89,
+    //     0x6704e8ee8f18d563,
+    //     0xcee3e9ac1e072119,
+    //     0x510d0e65e2b470c1,
+    //     0xf6323f486b9038f0,
+    //     0x0b508cdeffa5ceef,
+    //     0xf2417089e4fb3cbd,
+    //     0x60e75c2890d15730,
+    //     0xa6217d8bf660f29c,
+    //     0x7159cd30c3ac118e,
+    //     0x839b4e8fafead540,
+    //     0x0d3f3e5e82920adc,
+    //     0x8f7d83bddee7bba8,
+    //     0x780f2243ea071d06,
+    //     0xeb915845f3de1634,
+    //     0xd19e120d26b6f386,
+    //     0x016ee53a7e5fecc6,
+    //     0xcb5fd54e7933e477,
+    //     0xacb8417879fd449f,
+    //     0x9c22190be7f74732,
+    //     0x5d693c1ba3ba3621,
+    //     0xdcef0797c2b69ec7,
+    //     0x3d639263da827b13,
+    //     0xe273fd971bc8d0e7,
+    //     0x418f02702d227ed5,
+    //     0x8c25fda3b503038c,
+    //     0x2cbaed4daec8c07c,
+    //     0x5f58e6afcdd6ddc2,
+    //     0x284650ac5e1b0eba,
+    //     0x635b337ee819dab5,
+    //     0x9f9a036ed4f2d49f,
+    //     0xb93e260cae5c170e,
+    //     0xb0a7eae879ddb76d,
+    //     0xd0762cbc8ca6570c,
+    //     0x34c6efb812b04bf5,
+    //     0x40bf0ab5fa14c112,
+    //     0xb6b570fc7c5740d3,
+    //     0x5a27b9002de33454,
+    //     0xb1a5b165b6d2b2d2,
+    //     0x8722e0ace9d1be22,
+    //     0x788ee3b37e5680fb,
+    //     0x14a726661551e284,
+    //     0x98b7672f9ef3b419,
+    //     0xbb93ae776bb30e3a,
+    //     0x28fd3b046380f850,
+    //     0x30a4680593258387,
+    //     0x337dc00c61bd9ce1,
+    //     0xd5eca244c7a4ff1d,
+    //     0x7762638264d279bd,
+    //     0xc1e434bedeefd767,
+    //     0x0299351a53b8ec22,
+    //     0xb2d456e4ad251b80,
+    //     0x3e9ed1fda49cea0b,
+    //     0x2972a92ba450bed8,
+    //     0x20216dd77be493de,
+    //     0xadffe8cf28449ec6,
+    //     0x1c4dbb1c4c27d243,
+    //     0x15a16a8a8322d458,
+    //     0x388a128b7fd9a609,
+    //     0x2300e5d6baedf0fb,
+    //     0x2f63aa8647e15104,
+    //     0xf1c36ce86ecec269,
+    //     0x27181125183970c9,
+    //     0xe584029370dca96d,
+    //     0x4d9bbc3e02f1cfb2,
+    //     0xea35bc29692af6f8,
+    //     0x18e21b4beabb4137,
+    //     0x1e3b9fc625b554f4,
+    //     0x25d64362697828fd,
+    //     0x5a3f1bb1c53a9645,
+    //     0xdb7f023869fb8d38,
+    //     0xb462065911d4e1fc,
+    //     0x49c24ae4437d8030,
+    //     0xd793862c112b0566,
+    //     0xaadd1106730d8feb,
+    //     0xc43b6e0e97b0d568,
+    //     0xe29024c18ee6fca2,
+    //     0x5e50c27535b88c66,
+    //     0x10383f20a4ff9a87,
+    //     0x38e8ee9d71a45af8,
+    //     0xdd5118375bf1a9b9,
+    //     0x775005982d74d7f7,
+    //     0x86ab99b4dde6c8b0,
+    //     0xb1204f603f51c080,
+    //     0xef61ac8470250ecf,
+    //     0x1bbcd90f132c603f,
+    //     0x0cd1dabd964db557,
+    //     0x11a3ae5beb9d1ec9,
+    //     0xf755bfeea585d11d,
+    //     0xa3b83250268ea4d7,
+    //     0x516306f4927c93af,
+    //     0xddb4ac49c9efa1da,
+    //     0x64bb6dec369d4418,
+    //     0xf9cc95c22b4c1fcc,
+    //     0x08d37f755f4ae9f6,
+    //     0xeec49b613478675b,
+    //     0xf143933aed25e0b0,
+    //     0xe4c5dd8255dfc622,
+    //     0xe7ad7756f193198e,
+    //     0x92c2318b87fff9cb,
+    //     0x739c25f8fd73596d,
+    //     0x5636cac9f16dfed0,
+    //     0xdd8f909a938e0172,
+    //     0xc6401fe115063f5b,
+    //     0x8ad97b33f1ac1455,
+    //     0x0c49366bb25e8513,
+    //     0x0784d3d2f1698309,
+    //     0x530fb67ea1809a81,
+    //     0x410492299bb01f49,
+    //     0x139542347424b9ac,
+    //     0x9cb0bd5ea1a1115e,
+    //     0x02e3f615c38f49a1,
+    //     0x985d4f4a9c5291ef,
+    //     0x775b9feafdcd26e7,
+    //     0x304265a6384f0f2d,
+    //     0x593664c39773012c,
+    //     0x4f0a2e5fb028f2ce,
+    //     0xdd611f1000c17442,
+    //     0xd8185f9adfea4fd0,
+    //     0xef87139ca9a3ab1e,
+    //     0x3ba71336c34ee133,
+    //     0x7d3a455d56b70238,
+    //     0x660d32e130182684,
+    //     0x297a863f48cd1f43,
+    //     0x90e0a736a751ebb7,
+    //     0x549f80ce550c4fd3,
+    //     0x0f73b2922f38bd64,
+    //     0x16bf1f73fb7a9c3f,
+    //     0x6d1f5a59005bec17,
+    //     0x02ff876fa5ef97c4,
+    //     0xc5cb72a2a51159b0,
+    //     0x8470f39d2d5c900e,
+    //     0x25abb3f1d39fcb76,
+    //     0x23eb8cc9b372442f,
+    //     0xd687ba55c64f6364,
+    //     0xda8d9e90fd8ff158,
+    //     0xe3cbdc7d2fe45ea7,
+    //     0xb9a8c9b3aee52297,
+    //     0xc0d28a5c10960bd3,
+    //     0x45d7ac9b68f71a34,
+    //     0xeeb76e397069e804,
+    //     0x3d06c8bd1514e2d9,
+    //     0x9c9c98207cb10767,
+    //     0x65700b51aedfb5ef,
+    //     0x911f451539869408,
+    //     0x7ae6849fbc3a0ec6,
+    //     0x3bb340eba06afe7e,
+    //     0xb46e9d8b682ea65e,
+    //     0x8dcf22f9a3b34356,
+    //     0x77bdaeda586257a7,
+    //     0xf19e400a5104d20d,
+    //     0xc368a348e46d950f,
+    //     0x9ef1cd60e679f284,
+    //     0xe89cd854d5d01d33,
+    //     0x5cd377dc8bb882a2,
+    //     0xa7b0fb7883eee860,
+    //     0x7684403ec392950d,
+    //     0x5fa3f06f4fed3b52,
+    //     0x8df57ac11bc04831,
+    //     0x2db01efa1e1e1897,
+    //     0x54846de4aadb9ca2,
+    //     0xba6745385893c784,
+    //     0x541d496344d2c75b,
+    //     0xe909678474e687fe,
+    //     0xdfe89923f6c9c2ff,
+    //     0xece5a71e0cfedc75,
+    //     0x5ff98fd5d51fe610,
+    //     0x83e8941918964615,
+    //     0x5922040b47f150c1,
+    //     0xf97d750e3dd94521,
+    //     0x5080d4c2b86f56d7,
+    //     0xa7de115b56c78d70,
+    //     0x6a9242ac87538194,
+    //     0xf7856ef7f9173e44,
+    //     0x2265fc92feb0dc09,
+    //     0x17dfc8e4f7ba8a57,
+    //     0x9001a64209f21db8,
+    //     0x90004c1371b893c5,
+    //     0xb932b7cf752e5545,
+    //     0xa0b1df81b6fe59fc,
+    //     0x8ef1dd26770af2c2,
+    //     0x0541a4f9cfbeed35,
+    //     0x9e61106178bfc530,
+    //     0xb3767e80935d8af2,
+    //     0x0098d5782065af06,
+    //     0x31d191cd5c1466c7,
+    //     0x410fefafa319ac9d,
+    //     0xbdf8f242e316c4ab,
+    //     0x9e8cd55b57637ed0,
+    //     0xde122bebe9a39368,
+    //     0x4d001fd58f002526,
+    //     0xca6637000eb4a9f8,
+    //     0x2f2339d624f91f78,
+    //     0x6d1a7918c80df518,
+    //     0xdf9a4939342308e9,
+    //     0xebc2151ee6c8398c,
+    //     0x03cc2ba8a1116515,
+    //     0xd341d037e840cf83,
+    //     0x387cb5d25af4afcc,
+    //     0xbba2515f22909e87,
+    //     0x7248fe7705f38e47,
+    //     0x4d61e56a525d225a,
+    //     0x262e963c8da05d3d,
+    //     0x59e89b094d220ec2,
+    //     0x055d5b52b78b9c5e,
+    //     0x82b27eb33514ef99,
+    //     0xd30094ca96b7ce7b,
+    //     0xcf5cb381cd0a1535,
+    //     0xfeed4db6919e5a7c,
+    //     0x41703f53753be59f,
+    //     0x5eeea940fcde8b6f,
+    //     0x4cd1f1b175100206,
+    //     0x4a20358574454ec0,
+    //     0x1478d361dbbf9fac,
+    //     0x6f02dc07d141875c,
+    //     0x296a202ed8e556a2,
+    //     0x2afd67999bf32ee5,
+    //     0x7acfd96efa95491d,
+    //     0x6798ba0c0abb2c6d,
+    //     0x34c6f57b26c92122,
+    //     0x5736e1bad206b5de,
+    //     0x20057d2a0056521b,
+    //     0x3dea5bd5d0578bd7,
+    //     0x16e50d897d4634ac,
+    //     0x29bff3ecb9b7a6e3,
+    //     0x475cd3205a3bdcde,
+    //     0x18a42105c31b7e88,
+    //     0x023e7414af663068,
+    //     0x15147108121967d7,
+    //     0xe4a3dff1d7d6fef9,
+    //     0x01a8d1a588085737,
+    //     0x11b4c74eda62beef,
+    //     0xe587cc0d69a73346,
+    //     0x1ff7327017aa2a6e,
+    //     0x594e29c42473d06b,
+    //     0xf6f31db1899b12d5,
+    //     0xc02ac5e47312d3ca,
+    //     0xe70201e960cb78b8,
+    //     0x6f90ff3b6a65f108,
+    //     0x42747a7245e7fa84,
+    //     0xd1f507e43ab749b2,
+    //     0x1c86d265f15750cd,
+    //     0x3996ce73dd832c1c,
+    //     0x8e7fba02983224bd,
+    //     0xba0dec7103255dd4,
+    //     0x9e9cbd781628fc5b,
+    //     0xdae8645996edd6a5,
+    //     0xdebe0853b1a1d378,
+    //     0xa49229d24d014343,
+    //     0x7be5b9ffda905e1c,
+    //     0xa3c95eaec244aa30,
+    //     0x0230bca8f4df0544,
+    //     0x4135c2bebfe148c6,
+    //     0x166fc0cc438a3c72,
+    //     0x3762b59a8ae83efa,
+    //     0xe8928a4c89114750,
+    //     0x2a440b51a4945ee5,
+    //     0x80cefd2b7d99ff83,
+    //     0xbb9879c6e61fd62a,
+    //     0x6e7c8f1a84265034,
+    //     0x164bb2de1bbeddc8,
+    //     0xf3c12fe54d5c653b,
+    //     0x40b9e922ed9771e2,
+    //     0x551f5b0fbe7b1840,
+    //     0x25032aa7c4cb1811,
+    //     0xaaed34074b164346,
+    //     0x8ffd96bbf9c9c81d,
+    //     0x70fc91eb5937085c,
+    //     0x7f795e2a5f915440,
+    //     0x4543d9df5476d3cb,
+    //     0xf172d73e004fc90d,
+    //     0xdfd1c4febcc81238,
+    //     0xbc8dfb627fe558fc
+    // ];
 
     function mod(uint256 a) internal pure returns (uint256 res) {
         assembly {
@@ -596,144 +596,6 @@ contract Poseidon {
                 + state[11] * 0x80772dc2645b280b;
         }
     }
-
-    // function getFastPartialRoundInitialMatrix(uint256 r, uint256 c) private pure returns (uint256 x) {
-    //     if (c == 1) {
-    //         if (r == 1) return 0x80772dc2645b280b;
-    //         else if (r == 2) return 0xe796d293a47a64cb;
-    //         else if (r == 3) return 0xdcedab70f40718ba;
-    //         else if (r == 4) return 0xf4a437f2888ae909;
-    //         else if (r == 5) return 0xf97abba0dffb6c50;
-    //         else if (r == 6) return 0x7f8e41e0b0a6cdff;
-    //         else if (r == 7) return 0x726af914971c1374;
-    //         else if (r == 8) return 0x64dd936da878404d;
-    //         else if (r == 9) return 0x85418a9fef8a9890;
-    //         else if (r == 10) return 0x156048ee7a738154;
-    //         else if (r == 11) return 0xd841e8ef9dde8ba0;
-    //     } else
-    //     if (c == 2) {
-    //         if (r == 1) return 0xdc927721da922cf8;
-    //         else if (r == 2) return 0xb124c33152a2421a;
-    //         else if (r == 3) return 0x14a4a64da0b2668f;
-    //         else if (r == 4) return 0xc537d44dc2875403;
-    //         else if (r == 5) return 0x5e40f0c9bb82aab5;
-    //         else if (r == 6) return 0x4b1ba8d40afca97d;
-    //         else if (r == 7) return 0x1d7f8a2cce1a9d00;
-    //         else if (r == 8) return 0x4db9a2ead2bd7262;
-    //         else if (r == 9) return 0xd8a2eb7ef5e707ad;
-    //         else if (r == 10) return 0x91f7562377e81df5;
-    //         else if (r == 11) return 0x156048ee7a738154;
-    //     } else if (c == 3) {
-    //         if (r == 1) return 0xc1978156516879ad;
-    //         else if (r == 2) return 0x0ee5dc0ce131268a;
-    //         else if (r == 3) return 0x4715b8e5ab34653b;
-    //         else if (r == 4) return 0x7f68007619fd8ba9;
-    //         else if (r == 5) return 0x5996a80497e24a6b;
-    //         else if (r == 6) return 0x623708f28fca70e8;
-    //         else if (r == 7) return 0x18737784700c75cd;
-    //         else if (r == 8) return 0xbe2e19f6d07f1a83;
-    //         else if (r == 9) return 0xbfe85ababed2d882;
-    //         else if (r == 10) return 0xd8a2eb7ef5e707ad;
-    //         else if (r == 11) return 0x85418a9fef8a9890;
-    //     } else if (c == 4) {
-    //         if (r == 1) return 0x90e80c591f48b603;
-    //         else if (r == 2) return 0xa9032a52f930fae6;
-    //         else if (r == 3) return 0x1e8916a99c93a88e;
-    //         else if (r == 4) return 0xa4911db6a32612da;
-    //         else if (r == 5) return 0x07084430a7307c9a;
-    //         else if (r == 6) return 0xbf150dc4914d380f;
-    //         else if (r == 7) return 0x7fb45d605dd82838;
-    //         else if (r == 8) return 0x02290fe23c20351a;
-    //         else if (r == 9) return 0xbe2e19f6d07f1a83;
-    //         else if (r == 10) return 0x4db9a2ead2bd7262;
-    //         else if (r == 11) return 0x64dd936da878404d;
-    //     } else if (c == 5) {
-    //         if (r == 1) return 0x3a2432625475e3ae;
-    //         else if (r == 2) return 0x7e33ca8c814280de;
-    //         else if (r == 3) return 0xbba4b5d86b9a3b2c;
-    //         else if (r == 4) return 0x2f7e9aade3fdaec1;
-    //         else if (r == 5) return 0xad2f570a5b8545aa;
-    //         else if (r == 6) return 0xc26a083554767106;
-    //         else if (r == 7) return 0x862361aeab0f9b6e;
-    //         else if (r == 8) return 0x7fb45d605dd82838;
-    //         else if (r == 9) return 0x18737784700c75cd;
-    //         else if (r == 10) return 0x1d7f8a2cce1a9d00;
-    //         else if (r == 11) return 0x726af914971c1374;
-    //     } else if (c == 6) {
-    //         if (r == 1) return 0x00a2d4321cca94fe;
-    //         else if (r == 2) return 0xad11180f69a8c29e;
-    //         else if (r == 3) return 0xe76649f9bd5d5c2e;
-    //         else if (r == 4) return 0xe7ffd578da4ea43d;
-    //         else if (r == 5) return 0xab7f81fef4274770;
-    //         else if (r == 6) return 0x753b8b1126665c22;
-    //         else if (r == 7) return 0xc26a083554767106;
-    //         else if (r == 8) return 0xbf150dc4914d380f;
-    //         else if (r == 9) return 0x623708f28fca70e8;
-    //         else if (r == 10) return 0x4b1ba8d40afca97d;
-    //         else if (r == 11) return 0x7f8e41e0b0a6cdff;
-    //     } else if (c == 7) {
-    //         if (r == 1) return 0x77736f524010c932;
-    //         else if (r == 2) return 0xc75ac6d5b5a10ff3;
-    //         else if (r == 3) return 0xaf8e2518a1ece54d;
-    //         else if (r == 4) return 0x43a608e7afa6b5c2;
-    //         else if (r == 5) return 0xcb81f535cf98c9e9;
-    //         else if (r == 6) return 0xab7f81fef4274770;
-    //         else if (r == 7) return 0xad2f570a5b8545aa;
-    //         else if (r == 8) return 0x07084430a7307c9a;
-    //         else if (r == 9) return 0x5996a80497e24a6b;
-    //         else if (r == 10) return 0x5e40f0c9bb82aab5;
-    //         else if (r == 11) return 0xf97abba0dffb6c50;
-    //     } else if (c == 8) {
-    //         if (r == 1) return 0x904d3f2804a36c54;
-    //         else if (r == 2) return 0xf0674a8dc5a387ec;
-    //         else if (r == 3) return 0xdcda1344cdca873f;
-    //         else if (r == 4) return 0xca46546aa99e1575;
-    //         else if (r == 5) return 0x43a608e7afa6b5c2;
-    //         else if (r == 6) return 0xe7ffd578da4ea43d;
-    //         else if (r == 7) return 0x2f7e9aade3fdaec1;
-    //         else if (r == 8) return 0xa4911db6a32612da;
-    //         else if (r == 9) return 0x7f68007619fd8ba9;
-    //         else if (r == 10) return 0xc537d44dc2875403;
-    //         else if (r == 11) return 0xf4a437f2888ae909;
-    //     } else if (c == 9) {
-    //         if (r == 1) return 0xbf9b39e28a16f354;
-    //         else if (r == 2) return 0xb36d43120eaa5e2b;
-    //         else if (r == 3) return 0xcd080204256088e5;
-    //         else if (r == 4) return 0xdcda1344cdca873f;
-    //         else if (r == 5) return 0xaf8e2518a1ece54d;
-    //         else if (r == 6) return 0xe76649f9bd5d5c2e;
-    //         else if (r == 7) return 0xbba4b5d86b9a3b2c;
-    //         else if (r == 8) return 0x1e8916a99c93a88e;
-    //         else if (r == 9) return 0x4715b8e5ab34653b;
-    //         else if (r == 10) return 0x14a4a64da0b2668f;
-    //         else if (r == 11) return 0xdcedab70f40718ba;
-    //     } else if (c == 10) {
-    //         if (r == 1) return 0x3a1ded54a6cd058b;
-    //         else if (r == 2) return 0x6f232aab4b533a25;
-    //         else if (r == 3) return 0xb36d43120eaa5e2b;
-    //         else if (r == 4) return 0xf0674a8dc5a387ec;
-    //         else if (r == 5) return 0xc75ac6d5b5a10ff3;
-    //         else if (r == 6) return 0xad11180f69a8c29e;
-    //         else if (r == 7) return 0x7e33ca8c814280de;
-    //         else if (r == 8) return 0xa9032a52f930fae6;
-    //         else if (r == 9) return 0x0ee5dc0ce131268a;
-    //         else if (r == 10) return 0xb124c33152a2421a;
-    //         else if (r == 11) return 0xe796d293a47a64cb;
-    //     } else if (c == 11) {
-    //         if (r == 1) return 0x42392870da5737cf;
-    //         else if (r == 2) return 0x3a1ded54a6cd058b;
-    //         else if (r == 3) return 0xbf9b39e28a16f354;
-    //         else if (r == 4) return 0x904d3f2804a36c54;
-    //         else if (r == 5) return 0x77736f524010c932;
-    //         else if (r == 6) return 0x00a2d4321cca94fe;
-    //         else if (r == 7) return 0x3a2432625475e3ae;
-    //         else if (r == 8) return 0x90e80c591f48b603;
-    //         else if (r == 9) return 0xc1978156516879ad;
-    //         else if (r == 10) return 0xdc927721da922cf8;
-    //         else if (r == 11) return 0x80772dc2645b280b;
-    //     }
-    //     revert("illegal argument");
-    // }
 
     // `state[i]` allows 193 bits number.
     // `new_state[i]` is 64 bits number.
@@ -1305,12 +1167,112 @@ contract Poseidon {
         new_state[11] = add(state[11], FAST_PARTIAL_FIRST_ROUND_CONSTANT_11);
     }
 
+    function _getAllRoundConstant(uint256 index) private pure returns (uint256 roundConstant) {
+        if (index == 0) return 0xb585f766f2144405;
+        else if (index == 1) return 0x7746a55f43921ad7;
+        else if (index == 2) return 0xb2fb0d31cee799b4;
+        else if (index == 3) return 0x0f6760a4803427d7;
+        else if (index == 4) return 0xe10d666650f4e012;
+        else if (index == 5) return 0x8cae14cb07d09bf1;
+        else if (index == 6) return 0xd438539c95f63e9f;
+        else if (index == 7) return 0xef781c7ce35b4c3d;
+        else if (index == 8) return 0xcdc4a239b0c44426;
+        else if (index == 9) return 0x277fa208bf337bff;
+        else if (index == 10) return 0xe17653a29da578a1;
+        else if (index == 11) return 0xc54302f225db2c76;
+        else if (index == 12) return 0x86287821f722c881;
+        else if (index == 13) return 0x59cd1a8a41c18e55;
+        else if (index == 14) return 0xc3b919ad495dc574;
+        else if (index == 15) return 0xa484c4c5ef6a0781;
+        else if (index == 16) return 0x308bbd23dc5416cc;
+        else if (index == 17) return 0x6e4a40c18f30c09c;
+        else if (index == 18) return 0x9a2eedb70d8f8cfa;
+        else if (index == 19) return 0xe360c6e0ae486f38;
+        else if (index == 20) return 0xd5c7718fbfc647fb;
+        else if (index == 21) return 0xc35eae071903ff0b;
+        else if (index == 22) return 0x849c2656969c4be7;
+        else if (index == 23) return 0xc0572c8c08cbbbad;
+        else if (index == 24) return 0xe9fa634a21de0082;
+        else if (index == 25) return 0xf56f6d48959a600d;
+        else if (index == 26) return 0xf7d713e806391165;
+        else if (index == 27) return 0x8297132b32825daf;
+        else if (index == 28) return 0xad6805e0e30b2c8a;
+        else if (index == 29) return 0xac51d9f5fcf8535e;
+        else if (index == 30) return 0x502ad7dc18c2ad87;
+        else if (index == 31) return 0x57a1550c110b3041;
+        else if (index == 32) return 0x66bbd30e6ce0e583;
+        else if (index == 33) return 0x0da2abef589d644e;
+        else if (index == 34) return 0xf061274fdb150d61;
+        else if (index == 35) return 0x28b8ec3ae9c29633;
+        else if (index == 36) return 0x92a756e67e2b9413;
+        else if (index == 37) return 0x70e741ebfee96586;
+        else if (index == 38) return 0x019d5ee2af82ec1c;
+        else if (index == 39) return 0x6f6f2ed772466352;
+        else if (index == 40) return 0x7cf416cfe7e14ca1;
+        else if (index == 41) return 0x61df517b86a46439;
+        else if (index == 42) return 0x85dc499b11d77b75;
+        else if (index == 43) return 0x4b959b48b9c10733;
+        else if (index == 44) return 0xe8be3e5da8043e57;
+        else if (index == 45) return 0xf5c0bc1de6da8699;
+        else if (index == 46) return 0x40b12cbf09ef74bf;
+        else if (index == 47) return 0xa637093ecb2ad631;
+        else if (index == 312) return 0x475cd3205a3bdcde;
+        else if (index == 313) return 0x18a42105c31b7e88;
+        else if (index == 314) return 0x023e7414af663068;
+        else if (index == 315) return 0x15147108121967d7;
+        else if (index == 316) return 0xe4a3dff1d7d6fef9;
+        else if (index == 317) return 0x01a8d1a588085737;
+        else if (index == 318) return 0x11b4c74eda62beef;
+        else if (index == 319) return 0xe587cc0d69a73346;
+        else if (index == 320) return 0x1ff7327017aa2a6e;
+        else if (index == 321) return 0x594e29c42473d06b;
+        else if (index == 322) return 0xf6f31db1899b12d5;
+        else if (index == 323) return 0xc02ac5e47312d3ca;
+        else if (index == 324) return 0xe70201e960cb78b8;
+        else if (index == 325) return 0x6f90ff3b6a65f108;
+        else if (index == 326) return 0x42747a7245e7fa84;
+        else if (index == 327) return 0xd1f507e43ab749b2;
+        else if (index == 328) return 0x1c86d265f15750cd;
+        else if (index == 329) return 0x3996ce73dd832c1c;
+        else if (index == 330) return 0x8e7fba02983224bd;
+        else if (index == 331) return 0xba0dec7103255dd4;
+        else if (index == 332) return 0x9e9cbd781628fc5b;
+        else if (index == 333) return 0xdae8645996edd6a5;
+        else if (index == 334) return 0xdebe0853b1a1d378;
+        else if (index == 335) return 0xa49229d24d014343;
+        else if (index == 336) return 0x7be5b9ffda905e1c;
+        else if (index == 337) return 0xa3c95eaec244aa30;
+        else if (index == 338) return 0x0230bca8f4df0544;
+        else if (index == 339) return 0x4135c2bebfe148c6;
+        else if (index == 340) return 0x166fc0cc438a3c72;
+        else if (index == 341) return 0x3762b59a8ae83efa;
+        else if (index == 342) return 0xe8928a4c89114750;
+        else if (index == 343) return 0x2a440b51a4945ee5;
+        else if (index == 344) return 0x80cefd2b7d99ff83;
+        else if (index == 345) return 0xbb9879c6e61fd62a;
+        else if (index == 346) return 0x6e7c8f1a84265034;
+        else if (index == 347) return 0x164bb2de1bbeddc8;
+        else if (index == 348) return 0xf3c12fe54d5c653b;
+        else if (index == 349) return 0x40b9e922ed9771e2;
+        else if (index == 350) return 0x551f5b0fbe7b1840;
+        else if (index == 351) return 0x25032aa7c4cb1811;
+        else if (index == 352) return 0xaaed34074b164346;
+        else if (index == 353) return 0x8ffd96bbf9c9c81d;
+        else if (index == 354) return 0x70fc91eb5937085c;
+        else if (index == 355) return 0x7f795e2a5f915440;
+        else if (index == 356) return 0x4543d9df5476d3cb;
+        else if (index == 357) return 0xf172d73e004fc90d;
+        else if (index == 358) return 0xdfd1c4febcc81238;
+        else if (index == 359) return 0xbc8dfb627fe558fc;
+        revert("illegal index");
+    }
+
     // `state[i]` allows 200 bits number.
     // `new_state[i]` is 64 bits number.
     // 26743 gas (Can be improved to 469 gas if all are expanded to inline.)
     function _constant_layer(uint256[WIDTH] memory state, uint256 round_ctr)
         internal
-        view
+        pure
         returns (uint256[WIDTH] memory new_state)
     {
         unchecked {
@@ -1318,18 +1280,18 @@ contract Poseidon {
             //     new_state[i] = add(state[i], ALL_ROUND_CONSTANTS[i + WIDTH * round_ctr]);
             // }
             uint256 base_index = WIDTH * round_ctr;
-            new_state[0] = add(state[0], ALL_ROUND_CONSTANTS[base_index]);
-            new_state[1] = add(state[1], ALL_ROUND_CONSTANTS[base_index + 1]);
-            new_state[2] = add(state[2], ALL_ROUND_CONSTANTS[base_index + 2]);
-            new_state[3] = add(state[3], ALL_ROUND_CONSTANTS[base_index + 3]);
-            new_state[4] = add(state[4], ALL_ROUND_CONSTANTS[base_index + 4]);
-            new_state[5] = add(state[5], ALL_ROUND_CONSTANTS[base_index + 5]);
-            new_state[6] = add(state[6], ALL_ROUND_CONSTANTS[base_index + 6]);
-            new_state[7] = add(state[7], ALL_ROUND_CONSTANTS[base_index + 7]);
-            new_state[8] = add(state[8], ALL_ROUND_CONSTANTS[base_index + 8]);
-            new_state[9] = add(state[9], ALL_ROUND_CONSTANTS[base_index + 9]);
-            new_state[10] = add(state[10], ALL_ROUND_CONSTANTS[base_index + 10]);
-            new_state[11] = add(state[11], ALL_ROUND_CONSTANTS[base_index + 11]);
+            new_state[0] = add(state[0], _getAllRoundConstant(base_index));
+            new_state[1] = add(state[1], _getAllRoundConstant(base_index + 1));
+            new_state[2] = add(state[2], _getAllRoundConstant(base_index + 2));
+            new_state[3] = add(state[3], _getAllRoundConstant(base_index + 3));
+            new_state[4] = add(state[4], _getAllRoundConstant(base_index + 4));
+            new_state[5] = add(state[5], _getAllRoundConstant(base_index + 5));
+            new_state[6] = add(state[6], _getAllRoundConstant(base_index + 6));
+            new_state[7] = add(state[7], _getAllRoundConstant(base_index + 7));
+            new_state[8] = add(state[8], _getAllRoundConstant(base_index + 8));
+            new_state[9] = add(state[9], _getAllRoundConstant(base_index + 9));
+            new_state[10] = add(state[10], _getAllRoundConstant(base_index + 10));
+            new_state[11] = add(state[11], _getAllRoundConstant(base_index + 11));
         }
     }
 
@@ -1371,7 +1333,7 @@ contract Poseidon {
 
     function _full_rounds(uint256[WIDTH] memory state, uint256 round_ctr)
         internal
-        view
+        pure
         returns (uint256[WIDTH] memory, uint256)
     {
         unchecked {
@@ -1403,22 +1365,22 @@ contract Poseidon {
         return (state, round_ctr);
     }
 
-    function _partial_rounds(uint256[WIDTH] memory state, uint256 round_ctr)
-        internal
-        view
-        returns (uint256[WIDTH] memory, uint256)
-    {
-        unchecked {
-            for (uint256 i = 0; i < N_PARTIAL_ROUNDS; i++) {
-                state = _constant_layer(state, round_ctr);
-                state[0] = _sbox_monomial(state[0]);
-                state = _mds_layer(state);
-                round_ctr += 1;
-            }
-        }
+    // function _partial_rounds(uint256[WIDTH] memory state, uint256 round_ctr)
+    //     internal
+    //     view
+    //     returns (uint256[WIDTH] memory, uint256)
+    // {
+    //     unchecked {
+    //         for (uint256 i = 0; i < N_PARTIAL_ROUNDS; i++) {
+    //             state = _constant_layer(state, round_ctr);
+    //             state[0] = _sbox_monomial(state[0]);
+    //             state = _mds_layer(state);
+    //             round_ctr += 1;
+    //         }
+    //     }
 
-        return (state, round_ctr);
-    }
+    //     return (state, round_ctr);
+    // }
 
     function _partial_rounds_fast(uint256[WIDTH] memory state, uint256 round_ctr)
         internal
@@ -1549,7 +1511,7 @@ contract Poseidon {
         return (state, round_ctr);
     }
 
-    function _permute(uint256[WIDTH] memory state) internal view returns (uint256[WIDTH] memory) {
+    function _permute(uint256[WIDTH] memory state) internal pure returns (uint256[WIDTH] memory) {
         uint256 round_ctr = 0;
         (state, round_ctr) = _full_rounds(state, round_ctr);
         (state, round_ctr) = _partial_rounds_fast(state, round_ctr);
@@ -1562,11 +1524,11 @@ contract Poseidon {
         return state;
     }
 
-    function permute(uint256[WIDTH] memory state) external view returns (uint256[WIDTH] memory) {
+    function permute(uint256[WIDTH] memory state) external pure returns (uint256[WIDTH] memory) {
         return _permute(state);
     }
 
-    function _hash_n_to_m_no_pad(uint256[] memory input, uint256 num_outputs) internal view returns (uint256[] memory) {
+    function _hash_n_to_m_no_pad(uint256[] memory input, uint256 num_outputs) internal pure returns (uint256[] memory) {
         uint256[WIDTH] memory state;
         for (uint256 i = 0; i < WIDTH; i++) {
             state[i] = 0;
@@ -1591,7 +1553,7 @@ contract Poseidon {
         return output;
     }
 
-    function hash_n_to_m_no_pad(uint256[] memory input, uint256 num_outputs) external view returns (uint256[] memory output) {
+    function hash_n_to_m_no_pad(uint256[] memory input, uint256 num_outputs) external pure returns (uint256[] memory output) {
         output = _hash_n_to_m_no_pad(input, num_outputs);
     }
 }
