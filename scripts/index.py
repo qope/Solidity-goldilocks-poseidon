@@ -37,20 +37,22 @@ FAST_PARTIAL_ROUND_INITIAL_MATRIX = [
 INDENT = '    '
 
 
-def loop_each_r(r, prefix=''):
-    tmp = prefix + f'if (c == 1) ' + f'return {FAST_PARTIAL_ROUND_INITIAL_MATRIX[r - 1][0]};'
-    for c in range(2, 12):
-        tmp += prefix + f'else if (c == {c}) ' + f'return {FAST_PARTIAL_ROUND_INITIAL_MATRIX[r - 1][c - 1]};'
+def loop_each_c(c, prefix=''):
+    r = 1
+    tmp = prefix + f'if (r == {r}) return {FAST_PARTIAL_ROUND_INITIAL_MATRIX[r - 1][c - 1]};'
+    for r in range(2, 12):
+        tmp += prefix + f'else if (r == {r}) return {FAST_PARTIAL_ROUND_INITIAL_MATRIX[r - 1][c - 1]};'
 
     return tmp
 
 
 def make_function_inner(prefix=''):
-    tmp = prefix + 'if (r == 1) {' \
-        + loop_each_r(1, prefix=prefix + INDENT)
-    for r in range(2, 12):
-        tmp += prefix + '} ' + f'else if (r == {r})' + ' {' \
-            + loop_each_r(r, prefix=prefix + INDENT)
+    c = 1
+    tmp = prefix + f'if (c == {c}) ' + '{' \
+        + loop_each_c(c, prefix=prefix + INDENT)
+    for c in range(2, 12):
+        tmp += prefix + '} ' + f'else if (c == {c})' + ' {' \
+            + loop_each_c(c, prefix=prefix + INDENT)
 
     tmp += prefix + '}' \
         + prefix + 'revert("illegal argument");'
